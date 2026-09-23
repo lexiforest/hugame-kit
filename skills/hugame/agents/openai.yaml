@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hugame"
+  short_description: "Create, test, and share small web games"
+  default_prompt: "Use $hugame to make and test a small web game on my computer. Do not upload it yet."

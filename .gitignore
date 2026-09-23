@@ -1,0 +1,6 @@
+.DS_Store
+node_modules/
+packages/cli/assets/
+packages/cli/dist/
+release/
+*.tgz

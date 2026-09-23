@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hugame Package v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "title",
+    "description",
+    "instructions",
+    "orientation",
+    "controls",
+    "tags"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "title": { "type": "string", "minLength": 1, "maxLength": 120, "pattern": "\\S" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" },
+    "instructions": { "type": "string", "minLength": 1, "maxLength": 2000, "pattern": "\\S" },
+    "orientation": { "enum": ["portrait", "landscape", "any"] },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": { "type": "string", "minLength": 1, "maxLength": 80, "pattern": "\\S" }
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "arcade",
+          "puzzle",
+          "platformer",
+          "racing",
+          "sports",
+          "strategy",
+          "adventure",
+          "educational",
+          "kids"
+        ]
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 3,
+      "uniqueItems": true,
+      "default": [],
+      "items": { "enum": ["scores", "progress", "achievements"] }
+    },
+    "display": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "width", "height"],
+          "properties": {
+            "mode": { "const": "fixed" },
+            "width": { "type": "integer", "minimum": 160, "maximum": 4096 },
+            "height": { "type": "integer", "minimum": 160, "maximum": 4096 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": { "mode": { "const": "responsive" } }
+        }
+      ]
+    },
+    "achievements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "description": "IDs must be unique within the game; enforced by package validation.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "description", "target"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+          "title": { "type": "string", "minLength": 1, "maxLength": 80, "pattern": "\\S" },
+          "description": { "type": "string", "minLength": 1, "maxLength": 300, "pattern": "\\S" },
+          "target": { "type": "integer", "minimum": 1, "maximum": 1000000000 }
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "order"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1, "maxLength": 40, "pattern": "\\S" },
+        "order": { "enum": ["higher", "lower"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["capabilities"],
+        "properties": { "capabilities": { "contains": { "const": "achievements" } } }
+      },
+      "then": { "required": ["achievements"] },
+      "else": { "not": { "required": ["achievements"] } }
+    }
+  ],
+  "if": {
+    "required": ["capabilities"],
+    "properties": { "capabilities": { "contains": { "const": "scores" } } }
+  },
+  "then": { "required": ["score"] },
+  "else": { "not": { "required": ["score"] } }
+}

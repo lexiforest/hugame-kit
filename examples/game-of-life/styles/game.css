@@ -1,0 +1,320 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #0b1020;
+  color: #edf3ff;
+  font:
+    16px system-ui,
+    sans-serif;
+  padding: clamp(8px, 2vmin, 16px);
+}
+
+main {
+  width: min(100%, 920px);
+  height: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(8px, 2vmin, 16px);
+}
+
+header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+header > div {
+  min-width: 0;
+}
+
+h1 {
+  margin: 2px 0 0;
+  font-size: clamp(24px, 5vmin, 36px);
+  line-height: 1;
+}
+
+small {
+  color: #93a8c8;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: #7ce8d1;
+  color: #091723;
+  font: inherit;
+  font-weight: 700;
+}
+
+button.secondary {
+  background: #243853;
+  color: #fff;
+}
+
+button[aria-pressed="true"] {
+  box-shadow: 0 0 0 3px #f8ca74;
+}
+
+button:focus-visible,
+canvas:focus-visible {
+  outline: 3px solid #f8ca74;
+  outline-offset: 3px;
+}
+
+.play-area {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 260px);
+  gap: clamp(10px, 2.5vmin, 24px);
+}
+
+.board {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  flex: none;
+  border-radius: 20px;
+  background: #121d35;
+  touch-action: none;
+}
+
+body[data-game="pong"] canvas,
+body[data-game="life"] canvas {
+  aspect-ratio: 3 / 2;
+}
+
+.game-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: #b8c9e3;
+}
+
+.bar strong {
+  color: #edf3ff;
+  font-size: 30px;
+}
+
+.button-row {
+  display: flex;
+  gap: 8px;
+}
+
+.button-row > button {
+  flex: 1;
+}
+
+.button-row.wrap {
+  flex-wrap: wrap;
+}
+
+.number-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.number-pad button {
+  min-width: 0;
+  padding-inline: 0;
+}
+
+#status,
+.help {
+  margin: 0;
+  color: #b8c9e3;
+  line-height: 1.4;
+}
+
+#status {
+  min-height: 2.8em;
+  color: #edf3ff;
+}
+
+@media (max-width: 560px) {
+  main {
+    gap: 8px;
+  }
+
+  small,
+  .help {
+    display: none;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .play-area {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .game-panel {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 6px 10px;
+  }
+
+  .bar {
+    flex: 1 1 90px;
+  }
+
+  .bar strong {
+    font-size: 24px;
+  }
+
+  .button-row {
+    flex: 0 1 auto;
+  }
+
+  .number-pad {
+    flex: 1 1 100%;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  #erase {
+    flex: 1 1 100%;
+  }
+
+  #status {
+    flex: 1 1 100%;
+    min-height: 1.4em;
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  main {
+    gap: 8px;
+  }
+
+  small,
+  .help {
+    display: none;
+  }
+
+  button {
+    min-height: 36px;
+    padding-block: 7px;
+  }
+
+  .game-panel {
+    gap: 8px;
+  }
+
+  #status {
+    min-height: 1.4em;
+    font-size: 14px;
+  }
+}
+
+/* Living laboratory theme: botanical greens and glowing cells. */
+body {
+  background:
+    radial-gradient(circle at 12% 82%, #56db8f22 0 18%, transparent 18.5%),
+    radial-gradient(circle at 88% 14%, #d3f45d1c 0 16%, transparent 16.5%),
+    linear-gradient(140deg, #071f22, #0c3832 58%, #112e25);
+  color: #edffe3;
+  font-family: "Courier New", ui-monospace, monospace;
+}
+
+h1 {
+  color: #c9f45b;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 20px #9fe64f55;
+}
+
+small,
+#status,
+.help,
+.bar {
+  color: #9ccdb3;
+}
+
+button {
+  border: 1px solid #b7e55a;
+  border-radius: 999px;
+  background: #c7ef5b;
+  color: #153126;
+  box-shadow: 0 0 18px #b8ed5952;
+}
+
+button.secondary {
+  border-color: #58c58d;
+  background: #153f36;
+  color: #dfffc8;
+}
+
+.game-panel {
+  border: 1px solid #4f9e79;
+  border-radius: 20px;
+  background: #092820d9;
+  padding: clamp(12px, 2.5vmin, 22px);
+  box-shadow: inset 0 0 35px #4ec48512;
+}
+
+.bar strong,
+#status {
+  color: #d6fa72;
+}
+
+canvas {
+  border: 3px solid #6fd39b;
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 6px #0a2e27,
+    0 0 32px #74e7a744;
+}
+
+@media (max-width: 560px), (max-height: 480px) {
+  .game-panel {
+    padding: 8px;
+  }
+}

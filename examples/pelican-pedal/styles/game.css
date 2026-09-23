@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  padding: clamp(7px, 1.8vmin, 16px);
+  color: #173658;
+  background:
+    radial-gradient(circle at 13% 8%, #fff9b8 0 4%, transparent 20%),
+    linear-gradient(155deg, #6bd8f1, #edfbd3 58%, #ffc779);
+  font: 16px ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+}
+
+main {
+  width: min(100%, 920px);
+  height: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(7px, 1.6vmin, 13px);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vw, 20px);
+}
+
+header > div:first-child {
+  margin-right: auto;
+}
+
+h1 {
+  margin: 1px 0 0;
+  color: #ff675d;
+  font-size: clamp(24px, 5vmin, 40px);
+  line-height: 0.95;
+  letter-spacing: -1.5px;
+  text-shadow: 0 3px 0 #fff4c4;
+}
+
+small {
+  color: #287593;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: flex;
+  gap: 8px;
+}
+
+.stats span {
+  min-width: 80px;
+  border: 2px solid #ffffffa8;
+  border-radius: 13px;
+  padding: 6px 10px;
+  color: #39718b;
+  background: #ffffffad;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.stats strong {
+  display: block;
+  color: #173658;
+  font-size: 18px;
+}
+
+.stats b {
+  font: inherit;
+}
+
+button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 14px;
+  padding: 9px 15px;
+  cursor: pointer;
+  color: #173658;
+  background: #fff4a8;
+  box-shadow: 0 4px 0 #dda541;
+  font: inherit;
+  font-weight: 900;
+}
+
+button:active:not(:disabled),
+button.pressed {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #b67f2d;
+}
+
+button:disabled {
+  cursor: default;
+  filter: grayscale(0.6);
+  opacity: 0.58;
+}
+
+button:focus-visible,
+canvas:focus-visible {
+  outline: 3px solid #ff675d;
+  outline-offset: 2px;
+}
+
+.start {
+  color: #fff;
+  background: #ff675d;
+  box-shadow: 0 4px 0 #b83d48;
+  white-space: nowrap;
+}
+
+.stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 10;
+  border: 3px solid #fff7cf;
+  border-radius: clamp(14px, 3vmin, 26px);
+  background: #77ddef;
+  box-shadow: 0 8px 0 #4097ae55, 0 14px 35px #32668338;
+  touch-action: manipulation;
+}
+
+.message {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: min(74%, 580px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  text-align: center;
+}
+
+.message p {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 4px;
+  border-radius: 999px;
+  padding: 5px 13px;
+  color: #173658;
+  background: #ffffffe3;
+  box-shadow: 0 2px 8px #32668324;
+  font-size: clamp(11px, 2vmin, 14px);
+  font-weight: 800;
+}
+
+#save-status:empty {
+  display: none;
+}
+
+#save-status {
+  color: #336454;
+  font-size: 11px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr minmax(110px, 0.8fr) 1fr;
+  gap: clamp(7px, 1.5vw, 12px);
+  width: min(100%, 580px);
+  margin: 0 auto;
+}
+
+.controls button {
+  min-height: clamp(42px, 8vmin, 54px);
+  padding: 6px 12px;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.controls span {
+  font-size: 20px;
+}
+
+.pedal {
+  color: #fff;
+  background: #3187aa;
+  box-shadow: 0 4px 0 #18526e;
+}
+
+.jump {
+  color: #fff;
+  background: #65ad5c;
+  box-shadow: 0 4px 0 #34713c;
+}
+
+@media (max-width: 650px) {
+  body {
+    padding: 7px;
+  }
+
+  main {
+    gap: 7px;
+  }
+
+  small {
+    display: none;
+  }
+
+  .stats span {
+    min-width: 65px;
+    padding: 4px 7px;
+  }
+
+  .stats strong {
+    font-size: 15px;
+  }
+
+  .start {
+    padding-inline: 10px;
+  }
+}
+
+@media (max-height: 470px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  .stats span {
+    padding-block: 3px;
+  }
+
+  .stats strong {
+    display: inline;
+    margin-left: 3px;
+    font-size: 14px;
+  }
+
+  button,
+  .controls button {
+    min-height: 34px;
+    padding-block: 5px;
+  }
+}

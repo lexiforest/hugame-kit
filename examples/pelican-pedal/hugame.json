@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "title": "Pelican Pedal",
+  "description": "Help Pip the pelican pedal across a bright seaside trail, leap over broken bridges, and stomp the marsh monsters.",
+  "instructions": "Press Left and Right alternately to pedal. Press Space to jump over gaps and onto monsters. Keep your rhythm to build speed, and use the on-screen pedals and jump button on touch devices.",
+  "orientation": "landscape",
+  "controls": ["ArrowLeft", "ArrowRight", "Space", "Touch buttons"],
+  "tags": ["arcade", "kids"],
+  "capabilities": ["scores", "progress", "achievements"],
+  "display": { "mode": "responsive" },
+  "score": { "label": "Metres", "order": "higher" },
+  "achievements": [
+    {
+      "id": "first-flight",
+      "title": "First Flight",
+      "description": "Clear your first gap.",
+      "target": 1
+    },
+    {
+      "id": "century-ride",
+      "title": "Century Ride",
+      "description": "Ride 100 metres in one run.",
+      "target": 100
+    },
+    {
+      "id": "monster-masher",
+      "title": "Monster Masher",
+      "description": "Stomp or jump safely past 10 monsters across all rides.",
+      "target": 10
+    }
+  ]
+}

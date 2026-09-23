@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="minesweeper">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>Minesweeper</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="486" height="486" tabindex="0" aria-label="Minesweeper board"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar">
+            <span>Time</span><strong><span id="score">0</span>s</strong>
+          </div>
+          <div class="bar"><span>Mines left</span><strong id="mines">10</strong></div>
+          <div class="button-row">
+            <button id="dig" aria-pressed="true">Dig</button
+            ><button id="flag" class="secondary" aria-pressed="false">Flag</button>
+          </div>
+          <p id="status" role="status">Choose New game to begin.</p>
+          <p class="help">Clear every safe square. Numbers show nearby mines.</p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

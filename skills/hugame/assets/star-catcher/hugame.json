@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "title": "Star Catcher",
+  "description": "Catch as many twinkling stars as you can in 30 seconds!",
+  "instructions": "Press Start. Tap or click each yellow star. With a keyboard, use arrow keys to move the blue ring and press Space to catch a star. Try to beat your best score!",
+  "orientation": "any",
+  "controls": ["Tap or click a star", "Arrow keys and Space"],
+  "tags": ["arcade", "kids"],
+  "display": { "mode": "fixed", "width": 720, "height": 680 },
+  "capabilities": ["scores", "progress", "achievements"],
+  "achievements": [
+    {
+      "id": "first-star",
+      "title": "First star",
+      "description": "Catch your first star.",
+      "target": 1
+    },
+    {
+      "id": "hundred-stars",
+      "title": "Star collector",
+      "description": "Catch 100 stars across completed rounds.",
+      "target": 100
+    }
+  ],
+  "score": { "label": "Stars", "order": "higher" }
+}

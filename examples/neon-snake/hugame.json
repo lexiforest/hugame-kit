@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "title": "Neon Snake",
+  "description": "Collect coral snacks and grow your mint-green snake. Don't hit a wall or yourself.",
+  "instructions": "Press New game. Steer with arrow keys, WASD, swipe, or the on-screen arrows. Eat snacks to grow. Avoid walls and your tail.",
+  "orientation": "any",
+  "controls": ["Arrow keys", "WASD", "Swipe", "Touch buttons"],
+  "tags": ["arcade"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": {
+    "label": "Snacks",
+    "order": "higher"
+  }
+}

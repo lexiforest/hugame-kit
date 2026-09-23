@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "title": "Tic-Tac-Toe",
+  "description": "Take on a cheerful computer opponent in the timeless three-in-a-row game.",
+  "instructions": "Press New game. Tap a square or move with the arrow keys and press Space. You are X. Make three in a row before the computer does.",
+  "orientation": "any",
+  "controls": ["Mouse", "Touch", "Arrow keys", "Space"],
+  "tags": ["puzzle", "kids"],
+  "capabilities": [],
+  "display": { "mode": "responsive" }
+}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "title": "Minesweeper",
+  "description": "Clear a friendly nine-by-nine minefield using clues, flags, and careful deduction.",
+  "instructions": "Press New game. Select Dig or Flag, then tap a square. On desktop, left-click digs and right-click flags. Arrow keys move the cursor; Space digs and F flags. Clear every safe square to win.",
+  "orientation": "any",
+  "controls": ["Mouse", "Touch", "Arrow keys", "Space", "F"],
+  "tags": ["puzzle", "strategy"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": { "label": "Seconds", "order": "lower" }
+}

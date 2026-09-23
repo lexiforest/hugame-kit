@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gold Miner</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>Gold Miner</h1>
+        </div>
+        <button id="start" disabled>New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas
+            width="800"
+            height="450"
+            tabindex="0"
+            aria-label="Gold mine"
+          ></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar"><span>Gold</span><strong id="score">0</strong></div>
+          <div class="bar"><span>Time</span><strong id="time">45</strong></div>
+          <button id="drop" class="drop" disabled>Drop claw</button>
+          <p id="status" role="status">Loading your miner record…</p>
+          <p id="save-status" class="save-status"></p>
+          <p class="help">
+            Aim for gems and big nuggets. Rocks are heavy and worth very little.
+          </p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

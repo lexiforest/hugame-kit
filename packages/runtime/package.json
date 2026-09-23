@@ -1,0 +1,8 @@
+{
+  "name": "@hugame/runtime",
+  "version": "0.1.0",
+  "description": "Shared Hugame game bridge and local runtime source.",
+  "license": "MIT",
+  "private": true,
+  "type": "module"
+}

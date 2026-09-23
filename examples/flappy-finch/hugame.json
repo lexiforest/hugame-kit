@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "title": "Flappy Finch",
+  "description": "Guide a little golden finch through a field of mint-green pipes.",
+  "instructions": "Press New game. Tap the board or press Space to flap. Pass pipes to score. Avoid pipes, the ground, and the top of the sky.",
+  "orientation": "any",
+  "controls": ["Space", "Touch"],
+  "tags": ["arcade"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": {
+    "label": "Pipes",
+    "order": "higher"
+  }
+}

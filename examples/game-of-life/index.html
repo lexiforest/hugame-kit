@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Game of Life</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="life">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>Game of Life</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="600" height="400" tabindex="0" aria-label="Game of Life grid"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar"><span>Generation</span><strong id="generation">0</strong></div>
+          <div class="bar"><span>Population</span><strong id="population">0</strong></div>
+          <div class="button-row wrap">
+            <button id="play">Play</button><button id="step" class="secondary">Step</button
+            ><button id="clear" class="secondary">Clear</button>
+          </div>
+          <p id="status" role="status">Choose New game or draw your own pattern.</p>
+          <p class="help">Living cells follow simple neighbor rules. Tap any cell to toggle it.</p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

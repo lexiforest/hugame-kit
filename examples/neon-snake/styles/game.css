@@ -1,0 +1,311 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #0b1020;
+  color: #edf3ff;
+  font:
+    16px system-ui,
+    sans-serif;
+  padding: clamp(8px, 2vmin, 16px);
+}
+
+main {
+  width: min(100%, 920px);
+  height: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(8px, 2vmin, 16px);
+}
+
+header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+header > div {
+  min-width: 0;
+}
+
+h1 {
+  margin: 2px 0 0;
+  font-size: clamp(24px, 5vmin, 36px);
+  line-height: 1;
+}
+
+small {
+  color: #93a8c8;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: #7ce8d1;
+  color: #091723;
+  font: inherit;
+  font-weight: 700;
+}
+
+button:focus-visible,
+canvas:focus-visible {
+  outline: 3px solid #f8ca74;
+  outline-offset: 3px;
+}
+
+.play-area {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(210px, 260px);
+  gap: clamp(10px, 2.5vmin, 24px);
+}
+
+.board {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  flex: none;
+  border-radius: 20px;
+  background: #121d35;
+  touch-action: none;
+}
+
+.game-panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: #b8c9e3;
+}
+
+.bar strong {
+  color: #edf3ff;
+  font-size: 32px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  justify-content: center;
+  gap: 8px;
+}
+
+.controls[hidden] {
+  display: none;
+}
+
+.controls button {
+  min-width: 48px;
+  padding-inline: 0;
+  background: #243853;
+  color: #fff;
+}
+
+.controls button:first-child {
+  grid-column: 2;
+}
+
+.controls button:nth-child(2) {
+  grid-column: 1;
+}
+
+#status,
+.help {
+  margin: 0;
+  color: #b8c9e3;
+  line-height: 1.4;
+}
+
+#status {
+  min-height: 2.8em;
+  color: #edf3ff;
+}
+
+@media (max-width: 560px) {
+  main {
+    gap: 8px;
+  }
+
+  small,
+  .help {
+    display: none;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .play-area {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .game-panel {
+    display: grid;
+    grid-template-columns: minmax(80px, 1fr) auto;
+    grid-template-areas:
+      "score controls"
+      "status status";
+    align-items: center;
+    gap: 6px 10px;
+  }
+
+  .bar {
+    grid-area: score;
+  }
+
+  .bar strong {
+    font-size: 24px;
+  }
+
+  .controls {
+    grid-area: controls;
+    display: flex;
+  }
+
+  #status {
+    grid-area: status;
+    min-height: 1.4em;
+    font-size: 14px;
+  }
+}
+
+@media (max-height: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  main {
+    gap: 8px;
+  }
+
+  small,
+  .help {
+    display: none;
+  }
+
+  button {
+    min-height: 36px;
+    padding-block: 7px;
+  }
+
+  .game-panel {
+    gap: 8px;
+  }
+
+  #status {
+    min-height: 1.4em;
+    font-size: 14px;
+  }
+}
+
+/* High-energy cyber arcade theme. */
+body {
+  background:
+    linear-gradient(#140525dd, #140525dd),
+    repeating-linear-gradient(90deg, transparent 0 39px, #ec38bc1a 40px),
+    repeating-linear-gradient(0deg, transparent 0 39px, #41f6d31a 40px), #11031f;
+  color: #f6eaff;
+  font-family: "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+}
+
+h1 {
+  color: #64ffd9;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-shadow:
+    3px 3px 0 #e83fbd,
+    0 0 18px #37f6cc;
+}
+
+small,
+#status,
+.help,
+.bar {
+  color: #dba9f1;
+}
+
+button {
+  border: 2px solid #ff54c7;
+  border-radius: 6px;
+  background: #ff47bd;
+  color: #21052d;
+  box-shadow: 5px 5px 0 #5d1bb4;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.game-panel {
+  border: 2px solid #8c47e8;
+  border-radius: 8px;
+  background: #26083ce8;
+  padding: clamp(12px, 2.5vmin, 22px);
+  box-shadow:
+    8px 8px 0 #09000f,
+    0 0 28px #af32df3d;
+}
+
+.bar strong,
+#status {
+  color: #64ffd9;
+}
+
+.controls button {
+  border-color: #35d9c2;
+  border-radius: 5px;
+  background: #241149;
+  color: #64ffd9;
+  box-shadow: 3px 3px 0 #ff47bd;
+}
+
+canvas {
+  border: 4px solid #ff47bd;
+  border-radius: 5px;
+  box-shadow:
+    0 0 0 4px #37165b,
+    0 0 35px #ff47bd66;
+}
+
+@media (max-width: 560px), (max-height: 480px) {
+  .game-panel {
+    padding: 8px;
+  }
+}

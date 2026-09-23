@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "title": "Game of Life",
+  "description": "Draw tiny patterns and watch Conway's famous cellular world bloom, drift, and settle.",
+  "instructions": "Press New game for a random world. Tap cells to toggle them, then use Play/Pause or Step. Clear makes an empty canvas for your own pattern.",
+  "orientation": "landscape",
+  "controls": ["Mouse", "Touch", "Touch buttons"],
+  "tags": ["strategy", "educational"],
+  "capabilities": [],
+  "display": { "mode": "responsive" }
+}

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pelican Pedal</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <small>Hugame · seaside sprint</small>
+          <h1>Pelican Pedal</h1>
+        </div>
+        <div class="stats" aria-label="Ride statistics">
+          <span>Distance <strong><b id="score">0</b> m</strong></span>
+          <span>Best <strong><b id="best">0</b> m</strong></span>
+        </div>
+        <button id="start" class="start" disabled>New game</button>
+      </header>
+
+      <section class="stage">
+        <canvas
+          width="960"
+          height="600"
+          tabindex="0"
+          aria-label="Pelican cycling along a seaside trail"
+        ></canvas>
+        <div class="message">
+          <p id="status" role="status">Loading your cycling record…</p>
+          <p id="save-status"></p>
+        </div>
+      </section>
+
+      <section class="controls" aria-label="Game controls">
+        <button id="left" class="pedal" aria-label="Left pedal">
+          <span>←</span> Left
+        </button>
+        <button id="jump" class="jump" aria-label="Jump">
+          <span>↑</span> Jump
+        </button>
+        <button id="right" class="pedal" aria-label="Right pedal">
+          Right <span>→</span>
+        </button>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "title": "Sudoku",
+  "description": "A clean, approachable number puzzle with three shuffled boards and instant checks.",
+  "instructions": "Press New game. Select an empty square, then choose a number or use keys 1–9. Every row, column, and three-by-three box must contain 1 through 9 exactly once.",
+  "orientation": "any",
+  "controls": ["Mouse", "Touch", "Arrow keys", "Number keys"],
+  "tags": ["puzzle", "strategy"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": { "label": "Seconds", "order": "lower" }
+}

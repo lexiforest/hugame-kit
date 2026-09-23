@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>2048</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="tiles">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>2048</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="480" height="480" tabindex="0" aria-label="2048 game board"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar"><span>Points</span><strong id="score">0</strong></div>
+          <div class="controls">
+            <button data-dir="0,-1" aria-label="Up">↑</button
+            ><button data-dir="-1,0" aria-label="Left">←</button
+            ><button data-dir="0,1" aria-label="Down">↓</button
+            ><button data-dir="1,0" aria-label="Right">→</button>
+          </div>
+          <p id="status" role="status"></p>
+          <p class="help">
+            Use arrows, WASD, swipe, or the buttons. Join equal tiles to reach 2048.
+          </p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

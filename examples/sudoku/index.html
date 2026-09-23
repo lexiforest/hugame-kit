@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="sudoku">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>Sudoku</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="486" height="486" tabindex="0" aria-label="Sudoku board"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar">
+            <span>Time</span><strong><span id="score">0</span>s</strong>
+          </div>
+          <div class="number-pad" aria-label="Number pad"></div>
+          <button id="erase" class="secondary">Erase</button>
+          <p id="status" role="status">Choose New game for a puzzle.</p>
+          <p class="help">Fill every row, column, and box with 1 through 9.</p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

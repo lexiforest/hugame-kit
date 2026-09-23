@@ -1,0 +1,8 @@
+{
+  "name": "@hugame/format",
+  "version": "0.1.0",
+  "description": "Shared Hugame Package v1 validation and packaging source.",
+  "license": "MIT",
+  "private": true,
+  "type": "module"
+}

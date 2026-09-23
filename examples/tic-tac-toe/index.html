@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="tic-tac-toe">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · pocket classics</small>
+          <h1>Tic-Tac-Toe</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="480" height="480" tabindex="0" aria-label="Tic-Tac-Toe board"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar"><span>You</span><strong>X</strong></div>
+          <div class="bar"><span>Computer</span><strong>O</strong></div>
+          <p id="status" role="status">Choose New game to begin.</p>
+          <p class="help">Make three in a row. Use arrows and Space, or tap a square.</p>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

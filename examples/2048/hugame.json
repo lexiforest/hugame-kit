@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "title": "2048",
+  "description": "Slide, combine, and grow your numbers all the way to 2048.",
+  "instructions": "Press New game. Use arrow keys, WASD, swipe, or the on-screen arrows. Equal tiles merge once per move. Reach 2048, then keep playing for a higher score.",
+  "orientation": "any",
+  "controls": ["Arrow keys", "WASD", "Swipe", "Touch buttons"],
+  "tags": ["puzzle", "strategy"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": {
+    "label": "Points",
+    "order": "higher"
+  }
+}
