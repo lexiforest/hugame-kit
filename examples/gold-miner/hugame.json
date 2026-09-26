@@ -7,7 +7,7 @@
   "instructions": "Press New game. Press Space, Enter, the Drop claw button, or tap the mine to release the swinging claw. Gold and gems are valuable; heavy rocks take longer to pull up. Collect the biggest haul before the timer reaches zero.",
   "orientation": "landscape",
   "controls": ["Space", "Enter", "Touch", "Touch button"],
-  "tags": ["arcade", "kids"],
+  "tags": ["adventure"],
   "capabilities": ["scores", "progress", "achievements"],
   "display": { "mode": "responsive" },
   "score": { "label": "Gold", "order": "higher" },

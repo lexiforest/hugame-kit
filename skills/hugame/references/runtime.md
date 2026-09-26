@@ -4,16 +4,17 @@ Hugame injects `window.Hugame` before the entry page's scripts. Do not include a
 
 ```js
 window.Hugame?.ready();
-window.Hugame?.resize({ width: 640, height: 360 });
 window.Hugame?.score(12);
-window.Hugame?.gameOver(12);
+window.Hugame?.gameOver({ score: 42 });
 ```
 
-Declare the `scores` capability and matching score settings in the manifest before using scores. Send a score when it changes, not every animation frame. Send `gameOver(finalScore)` once per finished round. Scores must be finite numbers within the runtime's supported bounds; use small nonnegative integers for ordinary point-based games.
+## Scores
 
-The trusted parent handles signed-in score submission. Guests can play but cannot save leaderboard scores. Leaderboards are per published version and keep the player's best score according to the manifest's order. Scores are client-reported and not cheat-proof; do not promise secure competitions or prizes.
+Declare the `scores` capability and matching score settings in the manifest before using scores. Send a score when it changes, not every animation frame. Send `gameOver({ score: finalScore })` once per finished round. Scores must be finite numbers within the runtime's supported bounds; use small nonnegative integers for ordinary point-based games.
 
-The game receives no player identity. Do not read or fake the parent's messages, access its cookies, or construct custom `postMessage` envelopes. The site verifies the sending frame and game/version identifiers. Scores are integers between -1,000,000,000 and 1,000,000,000. `gameOver({ score: 12 })` is also supported; omitting the score uses the last reported value.
+Guests can play but cannot save leaderboard scores. Leaderboards are per published version and keep the player's best score according to the manifest's order. Scores are client-reported and not cheat-proof; do not promise secure competitions or prizes.
+
+The site verifies the sending frame and game/version identifiers. Scores are signed 32-bit integers from −2,147,483,648 through 2,147,483,647. Omitting the score uses the last reported value.
 
 ## Lifecycle events
 
@@ -28,11 +29,11 @@ window.Hugame?.on("viewport", ({ width, height, scale, expanded }) =>
 
 The host sends initial lifecycle, mute and viewport state on readiness, then sends changes. Events may repeat; handlers must be idempotent. Pause simulation, timers and audio on pause; resume only from a paused state. The host sends pause when the browser tab is hidden or the player presses Pause. Stop unloads the iframe; save checkpoints while playing, not during unload. Mute is cooperative: games with audio must handle it.
 
-Readiness is also sent on DOMContentLoaded. `resize()` remains accepted for legacy games but does not override the manifest's layout.
+Readiness is also sent on DOMContentLoaded.
 
 ## Local debugging
 
-Run `hugame dev GAME_FOLDER` instead of adding a mock SDK to the game. The loopback player injects the production bridge and sandbox, reloads after valid file changes, logs runtime calls, emulates progress and achievements in browser storage, and provides lifecycle and viewport controls. Use its reset control to test a new player. Local state is only for debugging and never becomes a Hugame account save or achievement. A private uploaded preview remains the final check before publication.
+With Node.js 22 or later, run `npx hugame dev GAME_FOLDER` instead of adding a mock SDK to the game. The loopback player injects the production bridge and sandbox, reloads after valid file changes, logs runtime calls, emulates progress and achievements in browser storage, and provides lifecycle and viewport controls. Use its reset control to test a new player. Local state is only for debugging and never becomes a Hugame account save or achievement. Without compatible Node.js, test the static game directly and state that the Hugame bridge and sandbox were not exercised. See [CLI commands and no-CLI workflows](commands.md#test-dev) for the static-server and browser checklist. A private uploaded preview remains the final check before publication.
 
 ## Progress
 
@@ -68,7 +69,7 @@ await Hugame.achievements.setProgress("collect-coins", 42);
 
 For a fixed game, declare `display: { mode: "fixed", width: 360, height: 640 }`. The iframe uses that logical viewport and the host scales the entire frame uniformly to fit its available width **and** height. All game content and controls must fit inside those dimensions. Keep canvas drawing coordinates consistent with its CSS bounds for touch input.
 
-For `display: { mode: "responsive" }`, fit the layout to the iframe's changing viewport. Responsive and legacy games use a stable 920 × 575 (16:10) stage on desktop; phones use the available width and up to 70% of the visible viewport height, while expanded mode uses the available screen. Observe the game container with ResizeObserver; constrain canvas and controls to available height, not only width. Packages without `display` retain responsive behavior for compatibility. Top-level `orientation` remains a preference, not an orientation lock.
+For `display: { mode: "responsive" }`, fit the layout to the iframe's changing viewport. Responsive games use a stable 920 × 575 (16:10) stage on desktop; phones use the available width and up to 70% of the visible viewport height, while expanded mode uses the available screen. Observe the game container with ResizeObserver; constrain canvas and controls to available height, not only width. Every package must explicitly choose `fixed` or `responsive`. Top-level `orientation` remains a preference, not an orientation lock.
 
 Neither mode scrolls the game document. Responsive games receive the stage's current dimensions and must reflow to fit them. For fixed games, the runtime observes rendered content size; if either dimension exceeds the declared viewport, Hugame uniformly scales and centers the entire iframe so both visual bounds fit inside the stage. It never enlarges a smaller fixed game. Avoid nested scroll areas.
 

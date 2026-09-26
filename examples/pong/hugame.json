@@ -7,7 +7,7 @@
   "instructions": "Press New game. Move with W/S, the arrow keys, touch the court, or use the Up and Down buttons. First to seven points wins.",
   "orientation": "landscape",
   "controls": ["Arrow keys", "WASD", "Touch", "Touch buttons"],
-  "tags": ["arcade", "sports"],
+  "tags": ["sports"],
   "capabilities": ["scores"],
   "display": { "mode": "responsive" },
   "score": { "label": "Points", "order": "higher" }

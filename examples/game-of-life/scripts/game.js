@@ -16,6 +16,8 @@ const cellHeight = canvas.height / rows;
 let cells = new Uint8Array(columns * rows);
 let generation = 0;
 let running = false;
+let hostPaused = false;
+let statusBeforePause = "";
 
 function index(x, y) {
   return y * columns + x;
@@ -108,25 +110,32 @@ function toggleCell(event) {
 }
 
 startButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   newGame();
 });
 playButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("action");
   togglePlay();
 });
 stepButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("move");
   running = false;
   nextGeneration();
   canvas.focus();
 });
 clearButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("action");
   clearWorld();
 });
-canvas.addEventListener("pointerdown", toggleCell);
+canvas.addEventListener("pointerdown", (event) => {
+  if (!hostPaused) toggleCell(event);
+});
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   if (event.code === "Space") {
     event.preventDefault();
     playSound("action");
@@ -134,7 +143,15 @@ canvas.addEventListener("keydown", (event) => {
   }
 });
 window.Hugame?.on("pause", () => {
-  if (running) togglePlay();
+  if (hostPaused) return;
+  hostPaused = true;
+  statusBeforePause = status.textContent;
+  status.textContent = "Paused by the player. This world is holding still.";
+});
+window.Hugame?.on("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
+  status.textContent = statusBeforePause;
 });
 
 function draw() {
@@ -169,6 +186,6 @@ function draw() {
 }
 
 setInterval(() => {
-  if (running) nextGeneration();
+  if (running && !hostPaused) nextGeneration();
 }, 180);
 newGame();

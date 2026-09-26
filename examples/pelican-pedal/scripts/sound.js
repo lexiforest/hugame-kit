@@ -24,6 +24,8 @@ const patterns = {
 let context;
 let master;
 let muted = false;
+let hostPaused = false;
+const activeOscillators = new Set();
 
 function audioOutput() {
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -39,7 +41,7 @@ function audioOutput() {
 }
 
 export function playSound(name) {
-  if (muted || !patterns[name]) return;
+  if (muted || hostPaused || !patterns[name]) return;
   const output = audioOutput();
   if (!output) return;
   const start = output.context.currentTime + 0.01;
@@ -56,6 +58,10 @@ export function playSound(name) {
     gain.gain.exponentialRampToValueAtTime(0.0001, begins + duration);
     oscillator.connect(gain);
     gain.connect(output.master);
+    activeOscillators.add(oscillator);
+    oscillator.addEventListener("ended", () => activeOscillators.delete(oscillator), {
+      once: true,
+    });
     oscillator.start(begins);
     oscillator.stop(begins + duration + 0.02);
   }
@@ -66,4 +72,16 @@ window.Hugame?.on?.("mute", ({ muted: nextMuted }) => {
   if (!context || !master) return;
   master.gain.cancelScheduledValues(context.currentTime);
   master.gain.setTargetAtTime(muted ? 0.0001 : 0.7, context.currentTime, 0.01);
+});
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  hostPaused = true;
+  for (const oscillator of activeOscillators) oscillator.stop();
+  activeOscillators.clear();
+});
+
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
 });

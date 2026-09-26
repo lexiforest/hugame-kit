@@ -7,7 +7,7 @@
   "instructions": "Press New game. Steer with arrow keys, WASD, swipe, or the on-screen arrows. Eat snacks to grow. Avoid walls and your tail.",
   "orientation": "any",
   "controls": ["Arrow keys", "WASD", "Swipe", "Touch buttons"],
-  "tags": ["arcade"],
+  "tags": ["others"],
   "capabilities": ["scores"],
   "display": { "mode": "responsive" },
   "score": {

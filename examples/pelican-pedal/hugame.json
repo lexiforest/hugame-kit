@@ -7,7 +7,7 @@
   "instructions": "Press Left and Right alternately to pedal. Press Space to jump over gaps and onto monsters. Keep your rhythm to build speed, and use the on-screen pedals and jump button on touch devices.",
   "orientation": "landscape",
   "controls": ["ArrowLeft", "ArrowRight", "Space", "Touch buttons"],
-  "tags": ["arcade", "kids"],
+  "tags": ["adventure"],
   "capabilities": ["scores", "progress", "achievements"],
   "display": { "mode": "responsive" },
   "score": { "label": "Metres", "order": "higher" },

@@ -9,8 +9,10 @@ const status = document.querySelector("#status"),
 let score = 0,
   playing = false,
   over = false,
+  hostPaused = false,
   previous = 0,
   elapsed = 0;
+let statusBeforePause = "";
 let bird, pipes, spawn, snake, direction, queued, food, grid, won;
 function tell(text) {
   status.textContent = text;
@@ -79,7 +81,7 @@ function reset() {
   draw();
 }
 function moveTiles(dx, dy) {
-  if (!playing) return;
+  if (!playing || hostPaused) return;
   const before = grid.join(",");
   let gained = 0;
   for (let a = 0; a < 4; a++) {
@@ -112,11 +114,11 @@ function steer(dx, dy) {
     moveTiles(dx, dy);
     return;
   }
-  if (mode === "snake" && playing && (dx !== -direction.x || dy !== -direction.y))
+  if (mode === "snake" && playing && !hostPaused && (dx !== -direction.x || dy !== -direction.y))
     queued = { x: dx, y: dy };
 }
 function flap() {
-  if (mode === "flappy" && playing) {
+  if (mode === "flappy" && playing && !hostPaused) {
     bird.v = -290;
     playSound("action");
   }
@@ -129,6 +131,7 @@ document.querySelectorAll("[data-dir]").forEach((button) =>
   }),
 );
 start.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   reset();
 });
@@ -154,12 +157,17 @@ canvas.addEventListener("keydown", (e) => {
 });
 let touch;
 canvas.addEventListener("pointerdown", (e) => {
+  if (hostPaused) return;
   canvas.focus();
   touch = { x: e.clientX, y: e.clientY };
   canvas.setPointerCapture(e.pointerId);
   flap();
 });
 canvas.addEventListener("pointerup", (e) => {
+  if (hostPaused) {
+    touch = null;
+    return;
+  }
   if (!touch) return;
   const dx = e.clientX - touch.x,
     dy = e.clientY - touch.y;
@@ -264,9 +272,9 @@ function draw() {
   }
 }
 function tick(now) {
-  const dt = previous ? Math.min((now - previous) / 1000, 0.05) : 0;
+  const dt = !hostPaused && previous ? Math.min((now - previous) / 1000, 0.05) : 0;
   previous = now;
-  if (playing && mode === "flappy") {
+  if (playing && !hostPaused && mode === "flappy") {
     bird.v += 780 * dt;
     bird.y += bird.v * dt;
     spawn -= dt;
@@ -292,7 +300,7 @@ function tick(now) {
     if (bird.y < 14 || bird.y > 450) finish("Watch the sky and the ground.");
     draw();
   }
-  if (playing && mode === "snake") {
+  if (playing && !hostPaused && mode === "snake") {
     elapsed += dt;
     if (elapsed >= Math.max(0.075, 0.15 - score * 0.002)) {
       elapsed = 0;
@@ -320,6 +328,19 @@ function tick(now) {
   }
   requestAnimationFrame(tick);
 }
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  hostPaused = true;
+  touch = null;
+  statusBeforePause = status.textContent;
+  if (playing) tell("Paused. The game will wait for you.");
+});
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
+  previous = 0;
+  if (playing) tell(statusBeforePause);
+});
 reset();
 playing = false;
 tell("Press New game to begin.");

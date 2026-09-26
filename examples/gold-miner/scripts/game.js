@@ -15,6 +15,7 @@ let score = 0;
 let timeLeft = 45;
 let playing = false;
 let hostPaused = false;
+let statusBeforePause = "";
 let previous = 0;
 let angle = -0.9;
 let swingDirection = 1;
@@ -349,6 +350,7 @@ function tick(now) {
 }
 
 startButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   newGame();
 });
@@ -365,13 +367,16 @@ canvas.addEventListener("keydown", (event) => {
 });
 
 window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
   hostPaused = true;
+  statusBeforePause = status.textContent;
   if (playing) tell("Paused. Your timer is safe.");
 });
 window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
   hostPaused = false;
   previous = 0;
-  if (playing) tell("Back to the mine! Drop the claw when you are ready.");
+  if (playing) tell(statusBeforePause);
 });
 window.Hugame?.on?.("viewport", () => draw());
 

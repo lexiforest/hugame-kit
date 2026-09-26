@@ -7,7 +7,7 @@
   "instructions": "Press New game. Tap the board or press Space to flap. Pass pipes to score. Avoid pipes, the ground, and the top of the sky.",
   "orientation": "any",
   "controls": ["Space", "Touch"],
-  "tags": ["arcade"],
+  "tags": ["others"],
   "capabilities": ["scores"],
   "display": { "mode": "responsive" },
   "score": {

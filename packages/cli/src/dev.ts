@@ -223,7 +223,7 @@ function hostHtml(
     function dimensions() {
       var selected = viewport.value.split(",").map(Number);
       var display = config.manifest.display;
-      var responsive = !display || display.mode !== "fixed";
+      var responsive = display.mode === "responsive";
       var base = responsive
         ? { width: selected[0], height: selected[1] }
         : { width: display.width, height: display.height };
@@ -257,10 +257,8 @@ function hostHtml(
       if (message.type === "READY") {
         log("READY", { width: message.width, height: message.height, sdkVersion: message.sdkVersion });
         sync();
-      } else if (message.type === "RESIZE") {
-        log("RESIZE", { width: message.width, height: message.height });
       } else if (message.type === "CONTENT_SIZE") {
-        if (config.manifest.display && config.manifest.display.mode === "fixed") {
+        if (config.manifest.display.mode === "fixed") {
           reported = { width: message.width, height: message.height };
           event("viewport", layout());
         }

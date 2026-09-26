@@ -143,6 +143,7 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
       runtime.indexOf('Object.defineProperty(window, "Hugame"') <
         runtime.indexOf("Star Catcher"),
     );
+    assert.doesNotMatch(runtime, /resize:\s*function/);
     assert.equal((await fetch(`${ready.url}/../package.json`)).status, 404);
     assert.equal((await fetch(`${ready.url}/game/index.html`)).status, 404);
     const first = await (await fetch(`${ready.url}/__hugame/status`)).json();
@@ -266,6 +267,13 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     site = `http://127.0.0.1:${server.address().port}`;
     const game = join(directory, "game");
     assert.equal((await run(["init", game, "--json"], directory)).code, 0);
+    const manifestPath = join(game, "hugame.json");
+    const initializedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+    const missingDisplay = { ...initializedManifest };
+    delete missingDisplay.display;
+    await writeFile(manifestPath, JSON.stringify(missingDisplay, null, 2) + "\n");
+    assert.equal((await run(["validate", game, "--json"], directory)).code, 1);
+    await writeFile(manifestPath, JSON.stringify(initializedManifest, null, 2) + "\n");
     assert.equal(
       (await run(["init", game, "--json"], directory)).code,
       1,

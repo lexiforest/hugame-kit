@@ -7,7 +7,7 @@
   "instructions": "Press New game. Tap a square or move with the arrow keys and press Space. You are X. Make three in a row before the computer does.",
   "orientation": "any",
   "controls": ["Mouse", "Touch", "Arrow keys", "Space"],
-  "tags": ["puzzle", "kids"],
+  "tags": ["puzzle", "strategy"],
   "capabilities": [],
   "display": { "mode": "responsive" }
 }

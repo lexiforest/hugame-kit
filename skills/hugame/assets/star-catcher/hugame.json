@@ -7,7 +7,7 @@
   "instructions": "Press Start. Tap or click each yellow star. With a keyboard, use arrow keys to move the blue ring and press Space to catch a star. Try to beat your best score!",
   "orientation": "any",
   "controls": ["Tap or click a star", "Arrow keys and Space"],
-  "tags": ["arcade", "kids"],
+  "tags": ["others"],
   "display": { "mode": "fixed", "width": 720, "height": 680 },
   "capabilities": ["scores", "progress", "achievements"],
   "achievements": [

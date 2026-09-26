@@ -372,11 +372,11 @@ export function validateFiles(files: Map<string, Buffer>): {
       message: "Make your cover smaller than 2 MiB.",
     });
   const [width, height] = coverDimensions(cover, coverPath);
-  if (width < 640 || height < 360 || width * 9 !== height * 16)
+  if (width < 640 || height < 400 || width * 10 !== height * 16)
     issues.push({
       file: coverPath,
       code: "cover_dimensions",
-      message: "Use a 16:9 cover at least 640 × 360 pixels.",
+      message: "Use a 16:10 cover at least 640 × 400 pixels.",
     });
   if (issues.length) throw new PackageError(issues);
   return { manifest: parsed.data!, coverPath, extractedBytes };

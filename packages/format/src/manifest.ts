@@ -9,15 +9,13 @@ export const PACKAGE_LIMITS = {
 } as const;
 
 export const GAME_TAGS = [
-  "arcade",
   "puzzle",
-  "platformer",
   "racing",
   "sports",
   "strategy",
   "adventure",
   "educational",
-  "kids",
+  "others",
 ] as const;
 
 export const manifestSchema = z
@@ -51,8 +49,7 @@ export const manifestSchema = z
           })
           .strict(),
         z.object({ mode: z.literal("responsive") }).strict(),
-      ])
-      .optional(),
+      ]),
     achievements: z
       .array(
         z

@@ -27,6 +27,8 @@ const profileDefaults = {
 let profile = { ...profileDefaults };
 let playing = false;
 let hostPaused = false;
+let pausedAt = 0;
+let statusBeforePause = "";
 let previous = 0;
 let worldX = 0;
 let speed = 0;
@@ -132,6 +134,7 @@ function updateScore() {
 }
 
 function newRide() {
+  if (hostPaused) return;
   playSound("start");
   buildCourse();
   playing = true;
@@ -605,10 +608,12 @@ function draw(now = 0) {
 }
 
 function tick(now) {
-  const dt = previous ? Math.min((now - previous) / 1000, 0.04) : 0;
+  const dt = !hostPaused && previous ? Math.min((now - previous) / 1000, 0.04) : 0;
   previous = now;
-  if (playing && !hostPaused) update(dt, now);
-  draw(now);
+  if (!hostPaused) {
+    if (playing) update(dt, now);
+    draw(now);
+  }
   requestAnimationFrame(tick);
 }
 
@@ -643,13 +648,19 @@ window.addEventListener("keydown", (event) => {
 });
 
 window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
   hostPaused = true;
+  pausedAt = performance.now();
+  statusBeforePause = status.textContent;
   if (playing) tell("Ride paused. Pip is balancing safely.");
 });
 window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  if (lastPedalAt) lastPedalAt += performance.now() - pausedAt;
   hostPaused = false;
+  pausedAt = 0;
   previous = 0;
-  if (playing) tell("Ride on! Alternate Left and Right to pedal.");
+  if (playing) tell(statusBeforePause);
 });
 window.Hugame?.on?.("viewport", () => draw());
 

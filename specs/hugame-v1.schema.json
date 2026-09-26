@@ -10,7 +10,8 @@
     "instructions",
     "orientation",
     "controls",
-    "tags"
+    "tags",
+    "display"
   ],
   "properties": {
     "schemaVersion": { "const": 1 },
@@ -33,15 +34,13 @@
       "uniqueItems": true,
       "items": {
         "enum": [
-          "arcade",
           "puzzle",
-          "platformer",
           "racing",
           "sports",
           "strategy",
           "adventure",
           "educational",
-          "kids"
+          "others"
         ]
       }
     },

@@ -13,6 +13,9 @@ const mineCount = 10;
 const cell = canvas.width / size;
 let cells = [];
 let playing = false;
+let hostPaused = false;
+let pausedAt = 0;
+let statusBeforePause = "";
 let planted = false;
 let startedAt = 0;
 let seconds = 0;
@@ -61,7 +64,8 @@ function setMode(next) {
 }
 
 function updateStats() {
-  if (playing && startedAt) seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+  if (playing && startedAt && !hostPaused)
+    seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
   scoreLabel.textContent = String(seconds);
   minesLabel.textContent = String(mineCount - cells.filter((entry) => entry.flagged).length);
 }
@@ -105,7 +109,7 @@ function finish(won) {
 }
 
 function reveal(x, y) {
-  if (!playing) return;
+  if (!playing || hostPaused) return;
   if (!planted) {
     plantMines(x, y);
     startedAt = Date.now();
@@ -136,7 +140,7 @@ function reveal(x, y) {
 }
 
 function toggleFlag(x, y) {
-  if (!playing) return;
+  if (!playing || hostPaused) return;
   const entry = cells[index(x, y)];
   if (entry.open) return;
   entry.flagged = !entry.flagged;
@@ -166,6 +170,7 @@ function pointFromEvent(event) {
 }
 
 canvas.addEventListener("pointerdown", (event) => {
+  if (hostPaused) return;
   event.preventDefault();
   canvas.focus();
   const point = pointFromEvent(event);
@@ -173,6 +178,7 @@ canvas.addEventListener("pointerdown", (event) => {
 });
 canvas.addEventListener("contextmenu", (event) => event.preventDefault());
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   const moves = {
     ArrowLeft: [-1, 0],
     ArrowRight: [1, 0],
@@ -193,11 +199,32 @@ canvas.addEventListener("keydown", (event) => {
   }
 });
 startButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   newGame();
 });
-digButton.addEventListener("click", () => setMode("dig"));
-flagButton.addEventListener("click", () => setMode("flag"));
+digButton.addEventListener("click", () => {
+  if (!hostPaused) setMode("dig");
+});
+flagButton.addEventListener("click", () => {
+  if (!hostPaused) setMode("flag");
+});
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  updateStats();
+  hostPaused = true;
+  pausedAt = Date.now();
+  statusBeforePause = status.textContent;
+  if (playing) status.textContent = "Paused. The minefield timer is stopped.";
+});
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  if (playing && startedAt) startedAt += Date.now() - pausedAt;
+  hostPaused = false;
+  pausedAt = 0;
+  if (playing) status.textContent = statusBeforePause;
+});
 
 function draw() {
   ctx.fillStyle = "#0f2638";
@@ -233,7 +260,7 @@ function draw() {
 }
 
 setInterval(() => {
-  if (playing && startedAt) updateStats();
+  if (playing && startedAt && !hostPaused) updateStats();
 }, 250);
 newGame();
 playing = false;

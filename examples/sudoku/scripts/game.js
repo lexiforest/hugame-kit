@@ -17,6 +17,9 @@ let values = [];
 let fixed = [];
 let selected = 2;
 let playing = false;
+let hostPaused = false;
+let pausedAt = 0;
+let statusBeforePause = "";
 let startedAt = 0;
 let seconds = 0;
 
@@ -38,11 +41,12 @@ function shuffledDigits() {
 }
 
 function updateTime() {
-  if (playing) seconds = Math.floor((Date.now() - startedAt) / 1000);
+  if (playing && !hostPaused) seconds = Math.floor((Date.now() - startedAt) / 1000);
   scoreLabel.textContent = String(seconds);
 }
 
 function newGame() {
+  if (hostPaused) return;
   const map = shuffledDigits();
   solution = [...baseSolution].map((value) => map[Number(value) - 1]);
   values = [...basePuzzle].map((value) => (value === "0" ? 0 : map[Number(value) - 1]));
@@ -58,7 +62,7 @@ function newGame() {
 }
 
 function enter(number) {
-  if (!playing || fixed[selected]) return;
+  if (!playing || hostPaused || fixed[selected]) return;
   values[selected] = number;
   const wrong = Boolean(number && number !== solution[selected]);
   if (wrong)
@@ -80,6 +84,7 @@ function enter(number) {
 }
 
 function selectFromPointer(event) {
+  if (hostPaused) return;
   const bounds = canvas.getBoundingClientRect();
   const x = Math.max(
     0,
@@ -96,6 +101,7 @@ function selectFromPointer(event) {
 
 canvas.addEventListener("pointerdown", selectFromPointer);
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   const row = Math.floor(selected / 9);
   const column = selected % 9;
   if (event.key === "ArrowLeft") selected = row * 9 + Math.max(0, column - 1);
@@ -113,10 +119,27 @@ canvas.addEventListener("keydown", (event) => {
   draw();
 });
 startButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   newGame();
 });
 eraseButton.addEventListener("click", () => enter(0));
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  updateTime();
+  hostPaused = true;
+  pausedAt = Date.now();
+  statusBeforePause = status.textContent;
+  if (playing) status.textContent = "Paused. Your solving time is stopped.";
+});
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  if (playing) startedAt += Date.now() - pausedAt;
+  hostPaused = false;
+  pausedAt = 0;
+  if (playing) status.textContent = statusBeforePause;
+});
 
 function draw() {
   ctx.fillStyle = "#fffaf0";
@@ -153,7 +176,7 @@ function draw() {
 }
 
 setInterval(() => {
-  if (playing) updateTime();
+  if (playing && !hostPaused) updateTime();
 }, 250);
 newGame();
 playing = false;

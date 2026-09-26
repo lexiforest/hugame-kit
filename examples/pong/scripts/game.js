@@ -13,6 +13,8 @@ let cpuY = 154;
 let playerScore = 0;
 let cpuScore = 0;
 let playing = false;
+let hostPaused = false;
+let statusBeforePause = "";
 let previous = 0;
 let ball = { x: 320, y: 200, vx: 260, vy: 120 };
 
@@ -31,6 +33,7 @@ function serve(direction = Math.random() < 0.5 ? -1 : 1) {
 }
 
 function newGame() {
+  if (hostPaused) return;
   playSound("start");
   playerY = cpuY = (canvas.height - paddle.height) / 2;
   playerScore = 0;
@@ -55,6 +58,7 @@ function finish() {
 }
 
 function movePlayer(amount) {
+  if (hostPaused) return;
   playerY = Math.max(0, Math.min(canvas.height - paddle.height, playerY + amount));
   draw();
   canvas.focus();
@@ -67,6 +71,7 @@ document
   );
 startButton.addEventListener("click", newGame);
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   if (["ArrowUp", "ArrowDown", "w", "s"].includes(event.key)) {
     event.preventDefault();
     keys.add(event.key.toLowerCase());
@@ -80,6 +85,7 @@ canvas.addEventListener("pointermove", (event) => {
 });
 
 function moveToPointer(event) {
+  if (hostPaused) return;
   const bounds = canvas.getBoundingClientRect();
   const y = ((event.clientY - bounds.top) / bounds.height) * canvas.height;
   playerY = Math.max(0, Math.min(canvas.height - paddle.height, y - paddle.height / 2));
@@ -180,12 +186,28 @@ function draw() {
 }
 
 function tick(now) {
-  const dt = previous ? Math.min(0.035, (now - previous) / 1000) : 0;
+  const dt = !hostPaused && previous ? Math.min(0.035, (now - previous) / 1000) : 0;
   previous = now;
-  if (playing) update(dt);
-  draw();
+  if (!hostPaused) {
+    if (playing) update(dt);
+    draw();
+  }
   requestAnimationFrame(tick);
 }
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  hostPaused = true;
+  keys.clear();
+  statusBeforePause = status.textContent;
+  if (playing) status.textContent = "Paused. The ball is holding its position.";
+});
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
+  previous = 0;
+  if (playing) status.textContent = statusBeforePause;
+});
 
 updateLabels();
 draw();

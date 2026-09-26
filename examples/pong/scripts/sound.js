@@ -7,9 +7,10 @@ const soundUrls = Object.fromEntries(
 );
 const activeSounds = new Set();
 let muted = false;
+let hostPaused = false;
 
 export function playSound(name) {
-  if (muted || !soundUrls[name]) return;
+  if (muted || hostPaused || !soundUrls[name]) return;
   const audio = new Audio(soundUrls[name]);
   audio.volume = 0.55;
   activeSounds.add(audio);
@@ -22,9 +23,24 @@ export function playSound(name) {
 window.Hugame?.on?.("mute", ({ muted: nextMuted }) => {
   muted = Boolean(nextMuted);
   if (!muted) return;
+  stopSounds();
+});
+
+function stopSounds() {
   for (const audio of activeSounds) {
     audio.pause();
     audio.currentTime = 0;
   }
   activeSounds.clear();
+}
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  hostPaused = true;
+  stopSounds();
+});
+
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
 });

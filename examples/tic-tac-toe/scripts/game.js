@@ -17,6 +17,11 @@ const lines = [
 let board = Array(9).fill("");
 let playing = false;
 let thinking = false;
+let hostPaused = false;
+let statusBeforePause = "";
+let computerTimer = null;
+let computerMoveAt = 0;
+let computerDelay = 0;
 let selected = 4;
 let winningLine = null;
 
@@ -28,6 +33,8 @@ function winner(state = board) {
 }
 
 function newGame() {
+  if (hostPaused) return;
+  cancelComputerMove();
   board = Array(9).fill("");
   playing = true;
   thinking = false;
@@ -39,6 +46,7 @@ function newGame() {
 }
 
 function finish(result) {
+  cancelComputerMove();
   playing = false;
   winningLine = result.line;
   playSound(result.mark === "X" ? "success" : result.mark === "O" ? "failure" : "action");
@@ -63,7 +71,7 @@ function tacticalMove(mark) {
 }
 
 function computerMove() {
-  if (!playing) return;
+  if (!playing || hostPaused) return;
   let move = tacticalMove("O");
   if (move < 0) move = tacticalMove("X");
   if (move < 0 && !board[4]) move = 4;
@@ -83,8 +91,26 @@ function computerMove() {
   }
 }
 
+function cancelComputerMove() {
+  if (computerTimer !== null) clearTimeout(computerTimer);
+  computerTimer = null;
+  computerMoveAt = 0;
+  computerDelay = 0;
+}
+
+function scheduleComputerMove(delay = 260) {
+  computerDelay = delay;
+  computerMoveAt = performance.now() + delay;
+  computerTimer = setTimeout(() => {
+    computerTimer = null;
+    computerMoveAt = 0;
+    computerDelay = 0;
+    computerMove();
+  }, delay);
+}
+
 function play(index) {
-  if (!playing || thinking || board[index]) return;
+  if (!playing || thinking || hostPaused || board[index]) return;
   selected = index;
   board[index] = "X";
   const result = winner();
@@ -96,7 +122,7 @@ function play(index) {
   thinking = true;
   status.textContent = "Computer is thinking…";
   draw();
-  setTimeout(computerMove, 260);
+  scheduleComputerMove();
 }
 
 function pointFromEvent(event) {
@@ -117,6 +143,7 @@ canvas.addEventListener("pointerdown", (event) => {
   play(pointFromEvent(event));
 });
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   const row = Math.floor(selected / 3);
   const column = selected % 3;
   if (event.key === "ArrowLeft") selected = row * 3 + Math.max(0, column - 1);
@@ -132,8 +159,27 @@ canvas.addEventListener("keydown", (event) => {
   draw();
 });
 startButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   newGame();
+});
+
+window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
+  hostPaused = true;
+  statusBeforePause = status.textContent;
+  if (computerTimer !== null) {
+    computerDelay = Math.max(0, computerMoveAt - performance.now());
+    clearTimeout(computerTimer);
+    computerTimer = null;
+  }
+  if (playing) status.textContent = "Paused. The board will wait for you.";
+});
+window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
+  hostPaused = false;
+  if (playing) status.textContent = statusBeforePause;
+  if (playing && thinking && computerTimer === null) scheduleComputerMove(computerDelay);
 });
 
 function drawMark(mark, x, y) {

@@ -7,7 +7,7 @@
   "instructions": "Press New game, then select two neighboring tiles to swap them. Match three or more identical tiles in a row or column. Complete each collection goal before running out of moves. Use touch, mouse, or the arrow keys and Space.",
   "orientation": "any",
   "controls": ["Mouse", "Touch", "Arrow keys", "Space", "Enter"],
-  "tags": ["puzzle", "strategy", "kids"],
+  "tags": ["puzzle", "strategy"],
   "capabilities": ["scores", "progress", "achievements"],
   "display": { "mode": "responsive" },
   "achievements": [

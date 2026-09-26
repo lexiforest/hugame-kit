@@ -57,6 +57,7 @@ let selected = null;
 let playing = false;
 let busy = false;
 let hostPaused = false;
+let statusBeforePause = "";
 let lastReportedScore = -1;
 
 function tell(message) {
@@ -108,7 +109,7 @@ function startLevel(index) {
 }
 
 function newGame() {
-  if (busy) return;
+  if (busy || hostPaused) return;
   playSound("start");
   score = 0;
   lastReportedScore = -1;
@@ -116,7 +117,7 @@ function newGame() {
 }
 
 function restartLevel() {
-  if (busy) return;
+  if (busy || hostPaused) return;
   playSound("start");
   score = levelStartScore;
   startLevel(levelIndex);
@@ -127,8 +128,13 @@ function delay(milliseconds) {
 }
 
 async function animationPause(milliseconds) {
-  await delay(milliseconds);
-  while (hostPaused) await delay(50);
+  let remaining = milliseconds;
+  while (remaining > 0) {
+    while (hostPaused) await delay(25);
+    const slice = Math.min(remaining, 25);
+    await delay(slice);
+    if (!hostPaused) remaining -= slice;
+  }
 }
 
 function collapseBoard() {
@@ -237,7 +243,7 @@ async function finishTurn() {
 }
 
 async function attemptSwap(first, second) {
-  if (!playing || busy || !areAdjacent(first, second)) return;
+  if (!playing || busy || hostPaused || !areAdjacent(first, second)) return;
   busy = true;
   selected = null;
   swap(board, first, second);
@@ -260,7 +266,7 @@ async function attemptSwap(first, second) {
 }
 
 function choose(index) {
-  if (!playing || busy) return;
+  if (!playing || busy || hostPaused) return;
   cursor = index;
   if (selected === null) {
     selected = index;
@@ -285,7 +291,7 @@ function choose(index) {
 }
 
 function showHint() {
-  if (!playing || busy) return;
+  if (!playing || busy || hostPaused) return;
   const hint = findPossibleMove(board);
   if (!hint) return;
   [selected, cursor] = hint;
@@ -407,6 +413,7 @@ canvas.addEventListener("pointerdown", (event) => {
 });
 
 canvas.addEventListener("keydown", (event) => {
+  if (hostPaused) return;
   const row = Math.floor(cursor / BOARD_SIZE);
   const column = cursor % BOARD_SIZE;
   if (event.key === "ArrowLeft") cursor = row * BOARD_SIZE + Math.max(0, column - 1);
@@ -428,17 +435,21 @@ startButton.addEventListener("click", newGame);
 restartButton.addEventListener("click", restartLevel);
 hintButton.addEventListener("click", showHint);
 nextButton.addEventListener("click", () => {
+  if (hostPaused) return;
   playSound("start");
   startLevel(levelIndex + 1);
 });
 
 window.Hugame?.on?.("pause", () => {
+  if (hostPaused) return;
   hostPaused = true;
+  statusBeforePause = status.textContent;
   if (playing) tell("Paused. The garden will wait for you.");
 });
 window.Hugame?.on?.("resume", () => {
+  if (!hostPaused) return;
   hostPaused = false;
-  if (playing) tell(`${moves} moves left. Collect ${goalRemaining} more ${TILES[LEVELS[levelIndex].goal].name}.`);
+  if (playing) tell(statusBeforePause);
 });
 window.Hugame?.on?.("viewport", draw);
 

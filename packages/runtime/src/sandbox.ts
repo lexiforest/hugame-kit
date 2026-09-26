@@ -6,7 +6,6 @@ export type RuntimeMessage = RuntimeIdentity & {
   bridgeVersion: 1;
   type:
     | "READY"
-    | "RESIZE"
     | "CONTENT_SIZE"
     | "SCORE"
     | "GAME_OVER"
@@ -143,7 +142,6 @@ export function buildSandboxRuntimeHtml(
   }
   Object.defineProperty(window, "Hugame", {value: Object.freeze({
     ready: function(details) { send("READY", Object.assign(size(details), {sdkVersion: 2})); },
-    resize: function(details) { send("RESIZE", size(details)); },
     score: score,
     gameOver: function(value) { if (value && typeof value === "object") value = value.score; if (value === undefined) value = lastScore; if (Number.isSafeInteger(value) && Math.abs(value) <= 1000000000) send("GAME_OVER", {value: value}); },
     on: function(event, listener) {
@@ -183,7 +181,7 @@ export function buildSandboxRuntimeHtml(
       if (!event.defaultPrevented) send("WHEEL", detail);
     }, 0);
   }, {passive: true});
-  window.addEventListener("resize", function() { window.Hugame.resize(); scheduleContentSize(); });
+  window.addEventListener("resize", scheduleContentSize);
 })();
 </script>`;
   // Place policy and bridge before any creator-controlled markup or scripts.
@@ -276,11 +274,7 @@ export function parseRuntimeMessage(
       deltaMode: message.deltaMode as number,
     };
   }
-  if (
-    message.type === "READY" ||
-    message.type === "RESIZE" ||
-    message.type === "CONTENT_SIZE"
-  ) {
+  if (message.type === "READY" || message.type === "CONTENT_SIZE") {
     if (
       ![message.width, message.height].every(
         (dimension) =>
