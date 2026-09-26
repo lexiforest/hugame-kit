@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/2048",
   "title": "2048",
   "description": "Slide, combine, and grow your numbers all the way to 2048.",
   "instructions": "Press New game. Use arrow keys, WASD, swipe, or the on-screen arrows. Equal tiles merge once per move. Reach 2048, then keep playing for a higher score.",

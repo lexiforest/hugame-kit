@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -29,6 +31,7 @@ function serve(direction = Math.random() < 0.5 ? -1 : 1) {
 }
 
 function newGame() {
+  playSound("start");
   playerY = cpuY = (canvas.height - paddle.height) / 2;
   playerScore = 0;
   cpuScore = 0;
@@ -43,6 +46,7 @@ function newGame() {
 function finish() {
   playing = false;
   const won = playerScore > cpuScore;
+  playSound(won ? "success" : "failure");
   status.textContent = won
     ? "You won the match! Choose New game for another."
     : "The computer won this one. Ready for a rematch?";
@@ -83,6 +87,7 @@ function moveToPointer(event) {
 }
 
 function bouncePaddle(x, y, side) {
+  playSound("action");
   const center = y + paddle.height / 2;
   const offset = (ball.y - center) / (paddle.height / 2);
   ball.vx = Math.abs(ball.vx) * side * 1.035;
@@ -127,7 +132,10 @@ function update(dt) {
     updateLabels();
     window.Hugame?.score(playerScore);
     if (playerScore >= 7 || cpuScore >= 7) finish();
-    else serve(playerWon ? -1 : 1);
+    else {
+      playSound(playerWon ? "collect" : "failure");
+      serve(playerWon ? -1 : 1);
+    }
   }
 }
 

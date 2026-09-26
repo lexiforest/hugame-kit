@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/flappy-finch",
   "title": "Flappy Finch",
   "description": "Guide a little golden finch through a field of mint-green pipes.",
   "instructions": "Press New game. Tap the board or press Space to flap. Pass pipes to score. Avoid pipes, the ground, and the top of the sky.",

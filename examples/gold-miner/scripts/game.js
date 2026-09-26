@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -96,6 +98,7 @@ function releaseClaw() {
   if (!playing || hostPaused || clawState !== "swinging") return;
   clawState = "extending";
   dropButton.disabled = true;
+  playSound("action");
   tell("The claw is digging down…");
 }
 
@@ -108,6 +111,7 @@ function reportAchievement(action) {
 
 function collectCaught() {
   if (!caught) return;
+  playSound("collect");
   updateScore(score + caught.value);
   if (caught.kind !== "boulder") {
     roundTreasures++;
@@ -133,6 +137,7 @@ async function finishRound() {
   if (!playing) return;
   playing = false;
   dropButton.disabled = true;
+  playSound(score ? "success" : "failure");
   tell(`Time! You hauled up ${score} points.`);
   window.Hugame?.gameOver(score);
   profile = {
@@ -343,7 +348,10 @@ function tick(now) {
   requestAnimationFrame(tick);
 }
 
-startButton.addEventListener("click", newGame);
+startButton.addEventListener("click", () => {
+  playSound("start");
+  newGame();
+});
 dropButton.addEventListener("click", releaseClaw);
 canvas.addEventListener("pointerdown", () => {
   canvas.focus();

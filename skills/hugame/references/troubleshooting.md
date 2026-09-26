@@ -15,6 +15,6 @@ Keep the full error's file path and code when diagnosing. Change the game packag
 | Wrong account or missing scope      | Check `hugame whoami`; reconnect through the browser with the intended account. Never borrow another person's token.     |
 | Upload interrupted                  | Retry the unchanged folder once. If it still fails, inspect the error and owned games before creating another upload.    |
 | Works locally, fails in preview     | Inspect browser errors for blocked network calls, storage access, absolute paths, and missing bundled files.             |
-| Replacement is not on the play page | Expected: the upload made it private. Preview it, then explicitly share it after confirmation.                          |
+| Replacement is not on the play page | Confirm the existing game ID was used, then reload the play page. A successful replacement keeps the same play link.   |
 
-Use the web uploader as a fallback when the CLI is not installed. It still validates the same package and creates a private draft. Never describe the draft as published or verified unless that action actually succeeded.
+Use the web uploader as a fallback when the CLI is not installed. It follows the same rule: a new game starts private, while an existing game's version is replaced in place. Never describe a new draft as published or verified unless that action actually succeeded.

@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/pelican-pedal",
   "title": "Pelican Pedal",
   "description": "Help Pip the pelican pedal across a bright seaside trail, leap over broken bridges, and stomp the marsh monsters.",
   "instructions": "Press Left and Right alternately to pedal. Press Space to jump over gaps and onto monsters. Keep your rhythm to build speed, and use the on-screen pedals and jump button on touch devices.",

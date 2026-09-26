@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -130,6 +132,7 @@ function updateScore() {
 }
 
 function newRide() {
+  playSound("start");
   buildCourse();
   playing = true;
   previous = 0;
@@ -167,6 +170,7 @@ function pedal(side) {
   }
 
   speed = Math.min(410, speed + 54);
+  playSound("move");
   lastPedal = side;
   lastPedalAt = now;
   if (speed > 290) tell("Great rhythm! Watch the trail ahead.");
@@ -176,6 +180,7 @@ function jump() {
   if (!playing || hostPaused || !grounded) return;
   velocityY = -620;
   grounded = false;
+  playSound("action");
   jumpButton.classList.add("pressed");
   setTimeout(() => jumpButton.classList.remove("pressed"), 90);
   tell("Wings up!");
@@ -186,6 +191,7 @@ async function endRide(reason) {
   playing = false;
   const metres = distance();
   speed = 0;
+  playSound("failure");
   tell(`${reason} You rode ${metres} m. Press New game to try again.`);
   window.Hugame?.gameOver(metres);
   profile = {
@@ -242,6 +248,7 @@ function update(dt, now) {
     const front = worldX - 25;
     if (!clearedGaps.has(gap.id) && rear < gap.x + gap.width && front >= gap.x + gap.width) {
       clearedGaps.add(gap.id);
+      playSound("collect");
       reportAchievement((achievements) => achievements.unlock("first-flight"));
       tell("Bridge cleared! Keep pedalling.");
     }
@@ -253,6 +260,7 @@ function update(dt, now) {
     if (relativeX < RIDER_X - 45) {
       clearedMonsters.add(monster.id);
       runMonsters++;
+      playSound("collect");
       tell("Monster dodged!");
       reportAchievement((achievements) =>
         achievements.setProgress(
@@ -281,6 +289,7 @@ function update(dt, now) {
       runMonsters++;
       riderY = monsterTop - WHEEL_RADIUS;
       velocityY = -300;
+      playSound("collect");
       tell("Monster stomped!");
       reportAchievement((achievements) =>
         achievements.setProgress(

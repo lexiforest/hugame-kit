@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/sudoku",
   "title": "Sudoku",
   "description": "A clean, approachable number puzzle with three shuffled boards and instant checks.",
   "instructions": "Press New game. Select an empty square, then choose a number or use keys 1–9. Every row, column, and three-by-three box must contain 1 through 9 exactly once.",

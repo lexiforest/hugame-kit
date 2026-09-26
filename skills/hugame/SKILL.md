@@ -15,13 +15,13 @@ Use `hugame init my-game` for a new starter, or copy `assets/star-catcher/` from
 
 The CLI requires Node.js 22 or later. Check `hugame --version` before use. This skill targets CLI 0.1.0 and package schema 1. If the CLI is unavailable, use the site's installation instructions or its web ZIP uploader. Do not install an unrelated package with a similar name. A `hugame-kit` source checkout can build the CLI with `npm run build:cli`.
 
-## Upload a private draft
+## Upload a game
 
 1. Run `hugame validate GAME_FOLDER`. Fix reported files and repeat. See [troubleshooting](references/troubleshooting.md) for failures.
 2. Run `hugame dev GAME_FOLDER`. Use its lifecycle and viewport controls and runtime log to test start/restart, keyboard, touch if supported, narrow screens, a complete round, saves, and achievements. Reset local player state when testing first-run behavior. Stop the dev server when finished; validation is not a play test.
 3. Let the account holder run `hugame login --site SITE_ORIGIN` and approve the displayed code in their browser. Use `https://hugame.dev` for production or `https://staging.hugame.dev` for staging. Do not approve on their behalf. The account holder must complete their birthday profile, and uploads are 13+; an under-13 creator needs an age-eligible adult to handle upload and publication using the adult's own account.
-4. With permission to upload, run `hugame upload GAME_FOLDER --site SITE_ORIGIN`. For an existing game, confirm its ID with `hugame games` and pass `--game GAME_ID`; do not silently create a duplicate. Uploading creates a private draft, never a public release.
-5. Give the user the returned private preview link. Check the preview in an authenticated browser when available, including assets, controls, and a full round. Otherwise ask the user to test it and accurately state that you have not verified it.
+4. With permission to upload, run `hugame upload GAME_FOLDER --site SITE_ORIGIN`. A new game starts as a private draft. For an existing game, confirm its ID with `hugame games`, explain that uploading replaces the live version immediately while preserving its visibility and settings, and wait for confirmation before passing `--game GAME_ID`; do not silently create a duplicate.
+5. Give the user the returned preview link. For a new game, check the private preview before publishing. For a replacement, also check its existing play link because the new version is already live when the game is public or unlisted. Otherwise ask the user to test it and accurately state that you have not verified it.
 
 Use `--json` for machine-readable output. Login emits a pairing instruction before the final result. Never print or read the credentials file into the conversation, commit it, or include it in a game package.
 
@@ -31,6 +31,6 @@ After a successful private preview, show the exact game title, target site, vers
 
 Only after confirmation, run `hugame publish VERSION_ID --site SITE_ORIGIN --visibility VISIBILITY --forkable true|false --yes`. Prefer the returned version ID over the game ID so a different game cannot be selected accidentally. Return the play link and state whether it is public or unlisted and whether its source ZIP is downloadable.
 
-For updates, warn that uploading replaces the existing build and makes the game private. Upload to the existing game ID, preview the private replacement, and obtain confirmation again before making it public or unlisted.
+For updates, validate and test locally before asking for upload confirmation. Uploading to the existing game ID replaces its only version immediately and preserves visibility, forkability, and other game settings; it does not require publishing again.
 
 Stop on denied login, missing permission, or a failed preview; explain the next action without bypassing checks. On an ambiguous upload failure, retry the same folder unchanged once: the CLI can resume finalization. Do not repeatedly upload new copies or publish to test whether an error has cleared.

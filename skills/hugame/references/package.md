@@ -18,6 +18,8 @@ The bundled Star Catcher is a complete example. A minimal manifest with scores:
   "schemaVersion": 1,
   "title": "Star Catcher",
   "description": "Catch stars before time runs out.",
+  "license": "MIT",
+  "homepage": "https://example.com/star-catcher",
   "instructions": "Tap a star, or move with arrow keys and press Space.",
   "orientation": "landscape",
   "controls": ["Arrow keys and Space", "Touch"],
@@ -27,7 +29,7 @@ The bundled Star Catcher is a complete example. A minimal manifest with scores:
 }
 ```
 
-For a game without scores, set `capabilities` to `[]` and omit `score`. Orientation is `portrait`, `landscape`, or `any`. Score order is `higher` or `lower`. Choose 1–5 unique tags from: arcade, puzzle, platformer, racing, sports, strategy, adventure, educational, kids. Unknown manifest fields are rejected. The site serves the full schema at `/schemas/hugame-v1.schema.json`.
+For a game without scores, set `capabilities` to `[]` and omit `score`. `license` names the source license and defaults to `MIT` when omitted. `homepage` is optional and, when present, must be an `http://` or `https://` URL. Orientation is `portrait`, `landscape`, or `any`. Score order is `higher` or `lower`. Choose 1–5 unique tags from: arcade, puzzle, platformer, racing, sports, strategy, adventure, educational, kids. Unknown manifest fields are rejected. The site serves the full schema at `/schemas/hugame-v1.schema.json`.
 
 ## Optional runtime features
 

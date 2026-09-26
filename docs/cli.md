@@ -36,7 +36,7 @@ The account holder approves the displayed code in their browser while login wait
 
 Local creation, development, validation, and `pack` do not require an account. Without a paired CLI, use `hugame pack` to create a ZIP and upload it through the website. `hugame upload` packages the folder in memory, so paired users do not need to run `pack` first.
 
-Upload returns a private preview link and version ID. Play the preview before sharing. After explicit confirmation of the exact build, visibility, and forkable-source setting:
+The first upload returns a private preview link and version ID. Play the preview before sharing. After explicit confirmation of the exact build, visibility, and forkable-source setting:
 
 ```sh
 hugame publish VERSION_ID --visibility public --forkable false --yes
@@ -44,7 +44,7 @@ hugame publish VERSION_ID --visibility public --forkable false --yes
 
 Use `--visibility unlisted` when anyone with the link may play but the game must stay out of discovery. Set `--forkable true` only when other people may download the source ZIP. Omitting `--forkable` preserves the current setting.
 
-`upload` does not publish. A successful upload links the local folder to the game for future updates. Each game retains one version, so an update replaces the old build and makes the replacement private. Use `--game GAME_ID` to target an existing game explicitly, especially after moving the folder or changing machines. `publish GAME_ID --yes` selects the retained version; agents should prefer the returned version ID to make the human confirmation unambiguous.
+The first `upload` does not publish. A successful upload links the local folder to the game for future updates. Each game retains one version, so a later upload replaces the old build in place while preserving the game's visibility, forkability, and other settings. A public or unlisted replacement is live immediately; test updates locally before uploading. Use `--game GAME_ID` to target an existing game explicitly, especially after moving the folder or changing machines. `publish GAME_ID --yes` selects the retained version for a private game; agents should prefer the returned version ID to make the human confirmation unambiguous.
 
 ## Machine output and credentials
 

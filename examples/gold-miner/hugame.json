@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/gold-miner",
   "title": "Gold Miner",
   "description": "Swing a claw through a glittering cavern and haul up as much treasure as you can before time runs out.",
   "instructions": "Press New game. Press Space, Enter, the Drop claw button, or tap the mine to release the swinging claw. Gold and gems are valuable; heavy rocks take longer to pull up. Collect the biggest haul before the timer reaches zero.",

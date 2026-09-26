@@ -25,6 +25,14 @@ export const manifestSchema = z
     schemaVersion: z.literal(1),
     title: z.string().trim().min(1).max(120),
     description: z.string().trim().min(1).max(500),
+    license: z.string().trim().min(1).max(100).default("MIT"),
+    homepage: z
+      .string()
+      .trim()
+      .max(2048)
+      .url()
+      .regex(/^https?:\/\//, "Use an http:// or https:// URL.")
+      .optional(),
     instructions: z.string().trim().min(1).max(2000),
     orientation: z.enum(["portrait", "landscape", "any"]),
     controls: z.array(z.string().trim().min(1).max(80)).min(1).max(10),

@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/minesweeper",
   "title": "Minesweeper",
   "description": "Clear a friendly nine-by-nine minefield using clues, flags, and careful deduction.",
   "instructions": "Press New game. Select Dig or Flag, then tap a square. On desktop, left-click digs and right-click flags. Arrow keys move the cursor; Space digs and F flags. Clear every safe square to win.",

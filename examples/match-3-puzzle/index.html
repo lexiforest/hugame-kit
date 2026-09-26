@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Garden Match</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <small>Hugame · ten-level puzzle</small>
+          <h1>Garden Match</h1>
+        </div>
+        <div class="stats" aria-label="Game statistics">
+          <span>Level <strong id="level">1 / 10</strong></span>
+          <span>Score <strong id="score">0</strong></span>
+          <span>Best <strong id="best">0</strong></span>
+        </div>
+        <button id="start" class="primary" disabled>New game</button>
+      </header>
+
+      <section class="game-layout">
+        <div class="stage">
+          <canvas
+            width="640"
+            height="640"
+            tabindex="0"
+            aria-label="Eight by eight match-three garden board"
+          ></canvas>
+          <div class="message">
+            <p id="status" role="status">Loading your garden record…</p>
+            <p id="save-status"></p>
+          </div>
+        </div>
+
+        <aside class="mission" aria-label="Current level mission">
+          <h2>Level mission</h2>
+          <div class="mission-card">
+            <span>Moves left</span>
+            <strong id="moves">—</strong>
+          </div>
+          <div class="mission-card">
+            <span>Collect</span>
+            <strong id="goal">—</strong>
+          </div>
+          <p>Select a tile, then choose a neighboring tile. Only swaps that make a match count.</p>
+          <div class="buttons">
+            <button id="hint" disabled>Show hint</button>
+            <button id="restart" disabled>Restart level</button>
+            <button id="next" class="primary" hidden>Next level</button>
+          </div>
+        </aside>
+      </section>
+    </main>
+    <script type="module" src="scripts/game.js"></script>
+  </body>
+</html>

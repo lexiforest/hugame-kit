@@ -1,4 +1,5 @@
 import { mergeLine } from "./logic.js";
+import { playSound } from "./sound.js";
 const mode = document.body.dataset.game,
   canvas = document.querySelector("canvas"),
   ctx = canvas.getContext("2d");
@@ -20,8 +21,10 @@ function points(value) {
   window.Hugame?.score(score);
 }
 function finish(text) {
+  if (!playing) return;
   playing = false;
   over = true;
+  playSound("failure");
   tell(text + " Press New game to try again.");
   window.Hugame?.gameOver(score);
 }
@@ -90,9 +93,11 @@ function moveTiles(dx, dy) {
   if (grid.join(",") !== before) {
     points(score + gained);
     addTile();
+    playSound(gained ? "collect" : "move");
   }
   if (!won && grid.includes(2048)) {
     won = true;
+    playSound("success");
     tell("2048! You won. Keep playing for a bigger tile.");
     window.Hugame?.gameOver(score);
   }
@@ -111,7 +116,10 @@ function steer(dx, dy) {
     queued = { x: dx, y: dy };
 }
 function flap() {
-  if (mode === "flappy" && playing) bird.v = -290;
+  if (mode === "flappy" && playing) {
+    bird.v = -290;
+    playSound("action");
+  }
 }
 document.querySelectorAll("[data-dir]").forEach((button) =>
   button.addEventListener("click", () => {
@@ -120,7 +128,10 @@ document.querySelectorAll("[data-dir]").forEach((button) =>
     canvas.focus();
   }),
 );
-start.addEventListener("click", reset);
+start.addEventListener("click", () => {
+  playSound("start");
+  reset();
+});
 canvas.addEventListener("keydown", (e) => {
   const dirs = {
     ArrowLeft: [-1, 0],
@@ -271,6 +282,7 @@ function tick(now) {
       if (!p.passed && p.x + 64 < 97) {
         p.passed = true;
         points(score + 1);
+        playSound("collect");
       }
       if (
         115 + 16 > p.x &&
@@ -302,6 +314,7 @@ function tick(now) {
         snake.unshift(head);
         if (eating) {
           points(score + 1);
+          playSound("collect");
           newFood();
         } else snake.pop();
       }

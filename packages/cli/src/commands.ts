@@ -38,6 +38,7 @@ type Uploaded = {
   slug: string;
   previewUrl: string;
   versionNumber: number;
+  state: string;
 };
 type OwnedGame = {
   id: string;
@@ -211,7 +212,7 @@ export async function runCommand(
         return {
           connected: true,
           site,
-          message: "Device connected. You can upload a private draft now.",
+          message: "Device connected. You can upload games now.",
         };
       } catch (error) {
         if (
@@ -264,6 +265,7 @@ export async function runCommand(
     const projectKey = `${site}|${directory}`;
     const saved = config.projects[projectKey] ?? {};
     const gameId = options.game ?? saved.gameId;
+    const replacing = Boolean(gameId);
     if (gameId && !/^[a-f0-9]{24}$/.test(gameId))
       throw new Error("Use the game ID shown by hugame games.");
     let uploadId =
@@ -340,8 +342,9 @@ export async function runCommand(
     return {
       ...result,
       previewUrl: new URL(result.previewUrl, site).href,
-      message:
-        "Private draft uploaded. Open the preview, test your game, then publish only when you are ready.",
+      message: replacing
+        ? "Version replaced. The game's visibility and settings are unchanged."
+        : "Private draft uploaded. Open the preview, test your game, then publish only when you are ready.",
     };
   }
   if (command === "publish") {

@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -85,6 +87,7 @@ function newGame() {
 
 function finish(won) {
   playing = false;
+  playSound(won ? "success" : "failure");
   updateStats();
   if (won) {
     seconds = Math.max(1, seconds);
@@ -109,6 +112,7 @@ function reveal(x, y) {
   }
   const first = cells[index(x, y)];
   if (first.flagged || first.open) return;
+  playSound("action");
   if (first.mine) {
     first.open = true;
     finish(false);
@@ -136,6 +140,7 @@ function toggleFlag(x, y) {
   const entry = cells[index(x, y)];
   if (entry.open) return;
   entry.flagged = !entry.flagged;
+  playSound("move");
   updateStats();
   draw();
 }
@@ -187,7 +192,10 @@ canvas.addEventListener("keydown", (event) => {
     act(cursor.x, cursor.y, "flag");
   }
 });
-startButton.addEventListener("click", newGame);
+startButton.addEventListener("click", () => {
+  playSound("start");
+  newGame();
+});
 digButton.addEventListener("click", () => setMode("dig"));
 flagButton.addEventListener("click", () => setMode("flag"));
 

@@ -1,5 +1,7 @@
 {
   "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/tic-tac-toe",
   "title": "Tic-Tac-Toe",
   "description": "Take on a cheerful computer opponent in the timeless three-in-a-row game.",
   "instructions": "Press New game. Tap a square or move with the arrow keys and press Space. You are X. Make three in a row before the computer does.",

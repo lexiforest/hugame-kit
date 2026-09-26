@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -97,6 +99,7 @@ function toggleCell(event) {
     Math.min(rows - 1, Math.floor(((event.clientY - bounds.top) / bounds.height) * rows)),
   );
   cells[index(x, y)] = cells[index(x, y)] ? 0 : 1;
+  playSound("move");
   running = false;
   status.textContent = "Cell toggled. Press Play when your pattern is ready.";
   updateStats();
@@ -104,18 +107,29 @@ function toggleCell(event) {
   canvas.focus();
 }
 
-startButton.addEventListener("click", newGame);
-playButton.addEventListener("click", togglePlay);
+startButton.addEventListener("click", () => {
+  playSound("start");
+  newGame();
+});
+playButton.addEventListener("click", () => {
+  playSound("action");
+  togglePlay();
+});
 stepButton.addEventListener("click", () => {
+  playSound("move");
   running = false;
   nextGeneration();
   canvas.focus();
 });
-clearButton.addEventListener("click", clearWorld);
+clearButton.addEventListener("click", () => {
+  playSound("action");
+  clearWorld();
+});
 canvas.addEventListener("pointerdown", toggleCell);
 canvas.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
     event.preventDefault();
+    playSound("action");
     togglePlay();
   }
 });

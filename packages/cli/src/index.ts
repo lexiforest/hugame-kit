@@ -10,7 +10,7 @@ const help = `Hugame CLI ${VERSION} — local games, shared adventures
   hugame validate [folder]              Check a Hugame package
   hugame pack [folder] [--out file.zip]  Save a reproducible ZIP
   hugame login --site https://hugame.dev Connect through your browser
-  hugame upload [folder] [--game ID]     Upload a private draft
+  hugame upload [folder] [--game ID]     Upload a game or replace its version
   hugame publish <game-or-version> --yes [--visibility public|unlisted]
                                        Share after checking the preview
   hugame games                          List your games and versions

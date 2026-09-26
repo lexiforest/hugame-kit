@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -39,6 +41,7 @@ function newGame() {
 function finish(result) {
   playing = false;
   winningLine = result.line;
+  playSound(result.mark === "X" ? "success" : result.mark === "O" ? "failure" : "action");
   status.textContent =
     result.mark === "X"
       ? "Three in a row — you win!"
@@ -74,6 +77,7 @@ function computerMove() {
   const result = winner();
   if (result) finish(result);
   else {
+    playSound("action");
     status.textContent = "Your turn. Find a line for X.";
     draw();
   }
@@ -88,6 +92,7 @@ function play(index) {
     finish(result);
     return;
   }
+  playSound("move");
   thinking = true;
   status.textContent = "Computer is thinking…";
   draw();
@@ -126,7 +131,10 @@ canvas.addEventListener("keydown", (event) => {
   event.preventDefault();
   draw();
 });
-startButton.addEventListener("click", newGame);
+startButton.addEventListener("click", () => {
+  playSound("start");
+  newGame();
+});
 
 function drawMark(mark, x, y) {
   const centerX = x * 160 + 80;

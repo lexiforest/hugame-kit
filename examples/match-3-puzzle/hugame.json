@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/examples/match-3-puzzle",
+  "title": "Garden Match",
+  "description": "Swap colorful garden gems, create cascading matches, and complete ten increasingly tricky levels.",
+  "instructions": "Press New game, then select two neighboring tiles to swap them. Match three or more identical tiles in a row or column. Complete each collection goal before running out of moves. Use touch, mouse, or the arrow keys and Space.",
+  "orientation": "any",
+  "controls": ["Mouse", "Touch", "Arrow keys", "Space", "Enter"],
+  "tags": ["puzzle", "strategy", "kids"],
+  "capabilities": ["scores", "progress", "achievements"],
+  "display": { "mode": "responsive" },
+  "achievements": [
+    {
+      "id": "first-bloom",
+      "title": "First Bloom",
+      "description": "Complete your first match.",
+      "target": 1
+    },
+    {
+      "id": "garden-climber",
+      "title": "Garden Climber",
+      "description": "Complete five levels.",
+      "target": 5
+    },
+    {
+      "id": "garden-master",
+      "title": "Garden Master",
+      "description": "Complete all ten levels.",
+      "target": 10
+    }
+  ],
+  "score": { "label": "Points", "order": "higher" }
+}

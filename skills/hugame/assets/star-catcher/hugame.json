@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "title": "Star Catcher",
   "description": "Catch as many twinkling stars as you can in 30 seconds!",
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/skills/hugame/assets/star-catcher",
   "instructions": "Press Start. Tap or click each yellow star. With a keyboard, use arrow keys to move the blue ring and press Space to catch a star. Try to beat your best score!",
   "orientation": "any",
   "controls": ["Tap or click a star", "Arrow keys and Space"],

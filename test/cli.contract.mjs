@@ -90,6 +90,11 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
   let child;
   try {
     assert.equal((await run(["init", game, "--json"], directory)).code, 0);
+    const starterManifest = JSON.parse(
+      await readFile(join(game, "hugame.json"), "utf8"),
+    );
+    assert.equal(starterManifest.license, "MIT");
+    assert.match(starterManifest.homepage, /^https:\/\//);
     child = spawn(
       process.execPath,
       [binary, "dev", game, "--port", "0", "--no-open", "--json"],
@@ -366,7 +371,9 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       1,
     );
     failFinalization = false;
-    assert.equal((await run(["upload", game, "--json"], directory)).code, 0);
+    const replacement = await run(["upload", game, "--json"], directory);
+    assert.equal(replacement.code, 0);
+    assert.match(replacement.messages[0].data.message, /visibility and settings are unchanged/);
     assert.equal(
       requests.filter((request) => request.path === "/object").length,
       puts,

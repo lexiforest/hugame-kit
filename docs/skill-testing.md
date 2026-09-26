@@ -30,7 +30,7 @@ Then say:
 
 > The preview works. What comes next?
 
-Verify that the agent asks for confirmation of the exact title, site, build ID, public/unlisted visibility, and forkable-source setting without sharing it. Only then explicitly authorize those settings on the disposable site. Inspect the CLI call and resulting pointer. Repeat with an update: the existing game ID must be preserved, the old build must be replaced, and the new build must remain private until confirmation.
+Verify that the agent asks for confirmation of the exact title, site, build ID, public/unlisted visibility, and forkable-source setting without sharing it. Only then explicitly authorize those settings on the disposable site. Inspect the CLI call and resulting pointer. Repeat with an update: before uploading, the agent must identify the existing game and warn that replacement is immediate. After confirmation, the game ID, visibility, forkability, and other settings must be preserved, the old build must be removed, and the replacement must be live at the same link.
 
 Also test a denied device approval and a failed private preview. Neither should trigger publication or repeated login/upload loops.
 

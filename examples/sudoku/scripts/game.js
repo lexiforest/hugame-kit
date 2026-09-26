@@ -1,3 +1,5 @@
+import { playSound } from "./sound.js";
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const startButton = document.querySelector("#start");
@@ -58,18 +60,21 @@ function newGame() {
 function enter(number) {
   if (!playing || fixed[selected]) return;
   values[selected] = number;
-  if (number && number !== solution[selected])
+  const wrong = Boolean(number && number !== solution[selected]);
+  if (wrong)
     status.textContent = "That number does not fit here yet.";
   else status.textContent = "Keep going — every row, column, and box matters.";
-  if (values.every(Boolean) && values.every((value, i) => value === solution[i])) {
+  const solved = values.every(Boolean) && values.every((value, i) => value === solution[i]);
+  if (solved) {
     playing = false;
+    playSound("success");
     updateTime();
     seconds = Math.max(1, seconds);
     scoreLabel.textContent = String(seconds);
     status.textContent = `Puzzle solved in ${seconds} seconds!`;
     window.Hugame?.score(seconds);
     window.Hugame?.gameOver(seconds);
-  }
+  } else playSound(wrong ? "failure" : "move");
   draw();
   canvas.focus();
 }
@@ -107,7 +112,10 @@ canvas.addEventListener("keydown", (event) => {
   event.preventDefault();
   draw();
 });
-startButton.addEventListener("click", newGame);
+startButton.addEventListener("click", () => {
+  playSound("start");
+  newGame();
+});
 eraseButton.addEventListener("click", () => enter(0));
 
 function draw() {
