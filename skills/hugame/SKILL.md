@@ -15,7 +15,7 @@ Prefer the Hugame CLI for local creation, package checks, the sandboxed developm
 
 First run `node --version`. The CLI requires Node.js 22 or later.
 
-- If Node.js 22 or later is installed, prefer `npx hugame` for every CLI operation. Start with `npx hugame --version`; this skill targets CLI 0.0.1 and package schema 1. Use the `hugame` package, not an unrelated similarly named package. A `hugame-kit` source checkout can instead build its local CLI with `npm run build:cli`.
+- If Node.js 22 or later is installed, prefer `npx hugame` for every CLI operation. Start with `npx hugame --version`; this skill targets CLI 0.0.2 and package schema 1. Use the `hugame` package, not an unrelated similarly named package. A `hugame-kit` source checkout can instead build its local CLI with `npm run build:cli`.
 - If Node.js is missing or older than 22, keep working without the CLI. Perform the documented text-based package check and use browser/site alternatives. State clearly which CLI-only checks were not exercised. Do not install Node unless the user asks.
 
 Read [CLI commands and no-CLI workflows](references/commands.md) for the requested operation. It covers every command, option, default, side effect, and fallback boundary. Also read [package format](references/package.md) when creating, validating, or packing; [runtime bridge](references/runtime.md) when testing gameplay or SDK behavior; and [troubleshooting](references/troubleshooting.md) when a check or site operation fails.

@@ -1,7 +1,7 @@
 import { parseArgs } from "node:util";
 import { runCommand } from "./commands";
 
-const VERSION = "0.0.1";
+const VERSION = "0.0.2";
 
 const help = `Hugame CLI ${VERSION} — local games, shared adventures
 

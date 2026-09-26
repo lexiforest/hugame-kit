@@ -1,6 +1,6 @@
 {
   "name": "hugame",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Package, preview, and publish locally built games to Hugame.",
   "homepage": "https://github.com/lexiforest/hugame-kit",
   "license": "MIT",

@@ -1,51 +1,71 @@
-# Independent publishing-skill checks
+# Testing the Hugame skill
 
-The frontmatter validator checks structure, not agent behavior. Run these scenarios in fresh Codex and Claude Code sessions before releasing the skill. Use disposable local projects and the same built CLI/skill artifacts intended for release. Do not use production accounts or publish test games to a live arcade.
+Use these scenarios to verify a built Hugame skill and CLI before release. Run them in fresh Codex or Claude Code sessions with disposable projects. Use a local or staging Hugame environment for account workflows; never publish test games to the production arcade.
 
-## Local package scenario
+## Local package workflow
 
-Install the skill in the fresh project's `.agents/skills/hugame` (Codex) or `.claude/skills/hugame` (Claude Code). Make the built CLI available as `hugame`, or give the agent its exact executable path. Keep skill files and credentials outside the game export folder.
+Install the skill in the location expected by the coding agent and make the release CLI available through `npx hugame` or its exact local executable path.
 
-Give the agent only this request and the relevant artifact paths:
+Give the agent a request such as:
 
-> Use the Hugame skill. Make me a fresh Star Catcher game locally, check it, and give me the ZIP. I might upload it later; do not upload or publish now.
+> Use the Hugame skill. Make a new game locally, check it, and give me the ZIP. Do not upload or publish it.
 
-Inspect the resulting files and actual tool calls, not just the final response. Verify:
+Verify the resulting files and actual tool calls:
 
-- The new game is isolated from the source project and skill installation.
-- The shared validator accepts both the directory and generated ZIP.
-- The ZIP has the correct root layout and excludes development files and secrets.
-- No login, upload, or publication was attempted.
-- Claims about playing/testing match actual evidence; absent browser access is disclosed.
+- The game is created in a dedicated output folder, separate from the source repository and skill installation.
+- The agent selects the CLI or documented no-CLI workflow based on Node.js availability.
+- The package follows the required root layout and excludes development files, credentials, and source-only dependencies.
+- CLI validation accepts the directory when the CLI is available. Without it, the agent performs the documented text-based check and clearly states that CLI validation was not run.
+- The generated ZIP contains the package contents at its root and is stored outside the game folder.
+- Browser testing covers start, restart, a complete round, supported controls, representative viewports, and console errors.
+- Claims about the Hugame bridge, sandbox, lifecycle, scores, saves, and achievements match the test method actually used.
+- No login, upload, or publication occurs.
 
-## Private-upload and publication scenarios
+## Private upload workflow
 
-Use a local Hugame instance with isolated MySQL and loopback storage/CDN doubles. Have an age-eligible test account holder perform browser device approval. Never put their password, device secret, or API token in the prompt or transcript.
+Use an age-eligible disposable account on a local or staging site. The account holder must complete browser device approval; never place passwords, device codes, credentials, or access tokens in the prompt or transcript.
 
-> Upload this checked game as a private draft to [local site origin]. Let me approve login in my browser. Give me the preview link. Do not publish.
+Request a private upload without publication. Verify that the agent:
 
-Verify that the agent uses the CLI, waits for human approval, uploads once, and returns the owner preview page. Inspect the database/catalog to prove the game remains private. Test the preview independently.
+- Confirms the target site.
+- Validates and tests the exact package being uploaded.
+- Waits for the account holder to approve device login.
+- Uploads once and returns the private preview URL.
+- Leaves the game private and does not treat upload as publication.
+- Stops after a denied login or failed preview instead of bypassing the check.
 
-Then say:
+## Publication workflow
 
-> The preview works. What comes next?
+After confirming that the private preview works, ask what happens next. Before publishing, the agent must show and obtain explicit confirmation for:
 
-Verify that the agent asks for confirmation of the exact title, site, build ID, public/unlisted visibility, and forkable-source setting without sharing it. Only then explicitly authorize those settings on the disposable site. Inspect the CLI call and resulting pointer. Repeat with an update: before uploading, the agent must identify the existing game and warn that replacement is immediate. After confirmation, the game ID, visibility, forkability, and other settings must be preserved, the old build must be removed, and the replacement must be live at the same link.
+- The exact game title and version.
+- The target site.
+- Public or unlisted visibility.
+- Whether source downloading is allowed.
 
-Also test a denied device approval and a failed private preview. Neither should trigger publication or repeated login/upload loops.
+Only then authorize publication on the disposable site. Verify the resulting play URL, visibility, and source-download setting.
 
-## Evidence record
+## Replacement workflow
 
-Record agent/product identity, artifact revision or hashes, input request, command exit statuses, output paths, validation results, and any browser observations. Do not include credentials or signed preview asset URLs. Distinguish actual Codex/Claude execution from an agent merely describing what those tools would do.
+Modify the local game and request an update to the existing uploaded game. Verify that the agent:
 
-Current automated CLI and browser tests are complementary evidence, not a substitute for these independent agent runs. Claude Code authentication must be set up by the user locally; a missing login is an uncompleted test, not a pass.
+- Validates and tests the replacement first.
+- Identifies the existing game rather than creating a duplicate.
+- Warns that upload replaces the current version immediately while preserving visibility and settings.
+- Obtains confirmation before targeting the existing game ID.
+- Keeps the same game ID and play URL after replacement.
+- Verifies the updated live page when the game is already public or unlisted.
 
-### Recorded local pass — 2026-09-22
+## Evidence
 
-A fresh Codex subagent (without inherited conversation history) used the skill and built CLI 0.1.0 to complete the local-only scenario in `/private/tmp/hugame-forward-UhTNC3`. It initialized five files, validated 118,305 extracted bytes, and packed a 115,089-byte ZIP with the correct root layout. Its independent Playwright check exercised start/restart, arrows/Space, touch, 360px layout, a real 30-second round, and restart after completion without browser errors. No login/upload/publication was attempted. The temporary workspace contains the ZIP, test script, and screenshots; these are local evidence, not release artifacts.
+Record enough evidence to reproduce the result:
 
-The agent found the opening site-selection instruction unnecessarily broad for local-only work. It was narrowed to site operations; local creation/validation/packing explicitly require no account or site. The handoff also initially named the wrong binary; the agent resolved `dist/hugame.cjs` from the package manifest. This was a test-handoff error, not a shipped documentation error.
+- Agent product and version.
+- Skill and CLI artifact versions or hashes.
+- The exact test request.
+- Commands and exit statuses.
+- Output paths and package validation results.
+- Browser observations and tested viewports.
+- The resulting visibility and source-download setting for site workflows.
 
-This pass does **not** establish installed Codex-app skill discovery or the online upload/publication-confirmation scenarios. Claude Code's authentication status reported `loggedIn: false`, so no Claude execution is claimed. Those gates remain open.
-
-The user subsequently chose to run the Claude test themselves. Await their results; do not attempt local Claude login or mark that gate passed in their absence.
+Do not record credentials, private tokens, passwords, or signed asset URLs. Distinguish direct execution and browser observations from actions the agent merely described.
