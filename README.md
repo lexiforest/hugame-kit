@@ -15,7 +15,7 @@ Beginner instructions live at [hugame.dev/learn](https://hugame.dev/learn). The 
 
 ```text
 packages/      Source for the hugame CLI package
-skills/        Agent skills and Star Catcher starter
+skills/        Agent skills and Ping Pong starter
 specs/         Package schema and links to the maintained references
 examples/      Complete example games
 ```
@@ -45,5 +45,4 @@ npm run build:cli
 node packages/cli/dist/hugame.cjs init my-game
 node packages/cli/dist/hugame.cjs dev my-game
 ```
-
 

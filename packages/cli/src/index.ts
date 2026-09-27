@@ -5,7 +5,7 @@ const VERSION = "0.0.2";
 
 const help = `Hugame CLI ${VERSION} — local games, shared adventures
 
-  hugame init [folder]                  Make a Star Catcher starter
+  hugame init [folder]                  Make a Ping Pong starter
   hugame dev [folder] [--port 4173]     Debug with the local Hugame runtime
   hugame validate [folder]              Check a Hugame package
   hugame pack [folder] [--out file.zip]  Save a reproducible ZIP

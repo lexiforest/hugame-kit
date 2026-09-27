@@ -17,7 +17,7 @@ Local creation, inspection, validation, packing, and testing do not need a Hugam
 | --- | --- | --- |
 | `--help` | Lists commands and options. | Use this reference. |
 | `--version` | Reports CLI and package-schema versions. | Read the installed skill/package metadata; do not claim a CLI version was executed. |
-| `init [folder]` | Creates a validated Star Catcher starter in an empty folder; defaults to `my-game`. | Copy the contents of `assets/star-catcher/` into an empty folder. |
+| `init [folder]` | Creates a validated Ping Pong starter in an empty folder; defaults to `my-game`. | Copy the contents of `assets/ping-pong/` into an empty folder. |
 | `validate [folder]` | Checks a game directory without changing it; defaults to the current directory. | Perform the text-based package check below. |
 | `pack [folder]` | Validates and creates a reproducible ZIP; defaults to the current directory. | Check the package, then archive its contents using an available OS tool. |
 | `dev [folder]` | Runs the local Hugame sandbox, bridge, lifecycle controls, viewport controls, logs, and local test state. | Use an ordinary static server or open the page directly, then follow the browser checklist below. Bridge behavior still requires a private preview. |
@@ -34,9 +34,9 @@ Local creation, inspection, validation, packing, and testing do not need a Hugam
 npx hugame init my-game
 ```
 
-The destination must be empty. The command copies the bundled Star Catcher package, checks that it can be read as a Hugame game, and refuses to overwrite an existing project.
+The destination must be empty. The command copies the bundled Ping Pong package, checks that it can be read as a Hugame game, and refuses to overwrite an existing project.
 
-Without the CLI, copy the contents of this skill's `assets/star-catcher/` directory into a new empty folder. Keep `hugame.json`, `index.html`, and exactly one cover at the folder root. Adapt the starter to the user's game; do not present unchanged Star Catcher as the result.
+Without the CLI, copy the contents of this skill's `assets/ping-pong/` directory into a new empty folder. Keep `hugame.json`, `index.html`, and exactly one cover at the folder root. Adapt the starter to the user's game; do not present unchanged Ping Pong as the result.
 
 ## Check: `validate`
 

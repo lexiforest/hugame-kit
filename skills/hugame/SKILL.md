@@ -24,7 +24,7 @@ Read [CLI commands and no-CLI workflows](references/commands.md) for the request
 
 Read [package format](references/package.md) before adapting a game. Keep the user's source project intact; for a framework project, make a separate static export folder containing only the package files. Bundle dependencies and assets locally.
 
-With compatible Node.js, use `npx hugame init my-game` for a new starter. Without it, copy `assets/star-catcher/` from this skill into an empty output folder. Start from the user's idea and change the example rather than presenting Star Catcher as the finished result. Read [runtime bridge](references/runtime.md) when adding lifecycle events, scores, saves, achievements, or fitting the game to the player. Games must fit without scrollbars; test that controls remain visible on portrait and landscape phones.
+With compatible Node.js, use `npx hugame init my-game` for a new starter. Without it, copy `assets/ping-pong/` from this skill into an empty output folder. Start from the user's idea and change the example rather than presenting Ping Pong as the finished result. Read [runtime bridge](references/runtime.md) when adding lifecycle events, scores, saves, achievements, or fitting the game to the player. Games must fit without scrollbars; test that controls remain visible on portrait and landscape phones.
 
 ## Upload a game
 

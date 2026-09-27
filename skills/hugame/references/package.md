@@ -11,22 +11,22 @@ scripts/           optional
 styles/            optional
 ```
 
-The bundled Star Catcher is a complete example. A minimal manifest with scores:
+The bundled Ping Pong game is a complete example. A minimal manifest with scores:
 
 ```json
 {
   "schemaVersion": 1,
-  "title": "Star Catcher",
-  "description": "Catch stars before time runs out.",
+  "title": "Ping Pong",
+  "description": "Play a quick paddle match against the computer.",
   "license": "MIT",
-  "homepage": "https://github.com/someone/star-catcher",
-  "instructions": "Tap a star, or move with arrow keys and press Space.",
+  "homepage": "https://github.com/someone/ping-pong",
+  "instructions": "Move with W/S, the arrow keys, touch, or the on-screen buttons.",
   "orientation": "landscape",
-  "controls": ["Arrow keys and Space", "Touch"],
-  "tags": ["others"],
+  "controls": ["Arrow keys", "WASD", "Touch", "Touch buttons"],
+  "tags": ["sports"],
   "display": { "mode": "responsive" },
   "capabilities": ["scores"],
-  "score": { "label": "Stars", "order": "higher" }
+  "score": { "label": "Points", "order": "higher" }
 }
 ```
 

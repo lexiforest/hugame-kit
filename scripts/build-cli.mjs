@@ -1,5 +1,5 @@
 import { build } from "esbuild";
-import { cp, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 await mkdir("packages/cli/dist", { recursive: true });
@@ -57,11 +57,8 @@ for (const [directory, manifest] of [...packages].sort((a, b) =>
     );
 }
 await writeFile("packages/cli/dist/THIRD_PARTY_NOTICES.txt", notices.join(""));
-await cp(
-  "skills/hugame/assets/star-catcher",
-  "packages/cli/assets/star-catcher",
-  {
-    recursive: true,
-  },
-);
+await rm("packages/cli/assets/ping-pong", { recursive: true, force: true });
+await cp("skills/hugame/assets/ping-pong", "packages/cli/assets/ping-pong", {
+  recursive: true,
+});
 console.log("Built hugame with its validator and starter assets.");

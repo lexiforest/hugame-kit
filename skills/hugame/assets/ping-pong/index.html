@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pocket Pong</title>
+    <link rel="stylesheet" href="styles/game.css" />
+  </head>
+  <body data-game="pong">
+    <main>
+      <header>
+        <div>
+          <small>Hugame · starter game</small>
+          <h1>Pocket Pong</h1>
+        </div>
+        <button id="start">New game</button>
+      </header>
+      <section class="play-area">
+        <div class="board">
+          <canvas width="640" height="400" tabindex="0" aria-label="Pong court"></canvas>
+        </div>
+        <aside class="game-panel">
+          <div class="bar"><span>You</span><strong id="player-score">0</strong></div>
+          <div class="bar"><span>Computer</span><strong id="cpu-score">0</strong></div>
+          <div class="button-row">
+            <button data-move="-1">Up</button><button data-move="1" class="secondary">Down</button>
+          </div>
+          <p id="status" role="status">Choose New game to serve.</p>
+          <p class="help">First to seven wins. Touch the court to move your paddle.</p>
+        </aside>
+      </section>
+    </main>
+    <script defer src="scripts/sound.js"></script>
+    <script defer src="scripts/game.js"></script>
+  </body>
+</html>

@@ -86,7 +86,7 @@ export async function runCommand(
     await mkdir(directory, { recursive: true });
     if ((await readdir(directory)).length)
       throw new Error("Choose an empty folder for your starter game.");
-    const assets = resolve(__dirname, "../assets/star-catcher");
+    const assets = resolve(__dirname, "../assets/ping-pong");
     for (const entry of await readdir(assets)) {
       await cp(join(assets, entry), join(directory, entry), {
         recursive: true,
@@ -98,7 +98,7 @@ export async function runCommand(
     return {
       directory,
       message:
-        "Your Star Catcher game is ready. Open index.html to play, then ask your agent to change it.",
+        "Your Ping Pong game is ready. Open index.html to play, then ask your agent to change it.",
     };
   }
   if (command === "validate" || command === "pack") {

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "license": "MIT",
+  "homepage": "https://github.com/lexiforest/hugame-kit/tree/main/skills/hugame/assets/ping-pong",
+  "title": "Pocket Pong",
+  "description": "A simple one-player paddle match against the computer.",
+  "instructions": "Press New game. Move with W/S, the arrow keys, touch the court, or use the Up and Down buttons. First to seven points wins.",
+  "orientation": "landscape",
+  "controls": ["Arrow keys", "WASD", "Touch", "Touch buttons"],
+  "tags": ["sports"],
+  "capabilities": ["scores"],
+  "display": { "mode": "responsive" },
+  "score": { "label": "Points", "order": "higher" }
+}

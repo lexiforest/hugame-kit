@@ -39,7 +39,7 @@ test("CLI distribution retains Hugame and bundled dependency license notices", a
   }
   assert.match(
     await readFile(
-      "packages/cli/assets/star-catcher/assets/license.html",
+      "packages/cli/assets/ping-pong/assets/license.html",
       "utf8",
     ),
     /MIT License/,
@@ -141,7 +141,7 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
     const runtime = await (await fetch(`${ready.url}${runtimePath}`)).text();
     assert.ok(
       runtime.indexOf('Object.defineProperty(window, "Hugame"') <
-        runtime.indexOf("Star Catcher"),
+        runtime.indexOf("Pocket Pong"),
     );
     assert.doesNotMatch(runtime, /resize:\s*function/);
     assert.equal((await fetch(`${ready.url}/../package.json`)).status, 404);
@@ -238,7 +238,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       return send({
         gameId,
         versionId,
-        slug: "star",
+        slug: "pong",
         versionNumber: 1,
         previewUrl: `/preview/${gameId}/${versionId}`,
         state: "draft",
@@ -248,14 +248,14 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       return send([
         {
           id: gameId,
-          title: "Star Catcher",
-          slug: "star",
+          title: "Pocket Pong",
+          slug: "pong",
           latestVersionId: versionId,
           versions: [{ id: versionId, versionNumber: 1 }],
         },
       ]);
     if (request.url === `/api/games/${gameId}/publish`)
-      return send({ gameId, versionId, url: "/g/star", visibility: body.visibility });
+      return send({ gameId, versionId, url: "/g/pong", visibility: body.visibility });
     if (request.url === `/api/games/${gameId}/settings`)
       return send({ gameId, forkable: body.forkable });
     if (request.url === "/api/me") return send({ name: "Test Creator" });
@@ -355,7 +355,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       ],
       directory,
     );
-    assert.equal(published.messages[0].data.url, `${site}/g/star`);
+    assert.equal(published.messages[0].data.url, `${site}/g/pong`);
     const publishRequest = requests.find((request) => request.path.endsWith("/publish"));
     assert.equal(publishRequest.body.versionId, versionId);
     assert.equal(publishRequest.body.visibility, "unlisted");

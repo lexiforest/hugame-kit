@@ -40,8 +40,8 @@ async function zipSkill(): Promise<Buffer> {
 
 await mkdir(releaseFolder, { recursive: true });
 await writeFile(
-  join(releaseFolder, "star-catcher.zip"),
-  await packDirectory(join(skillFolder, "assets/star-catcher")),
+  join(releaseFolder, "ping-pong.zip"),
+  await packDirectory(join(skillFolder, "assets/ping-pong")),
 );
 await writeFile(join(releaseFolder, "hugame.zip"), await zipSkill());
-console.log("Built release/star-catcher.zip and release/hugame.zip.");
+console.log("Built release/ping-pong.zip and release/hugame.zip.");
