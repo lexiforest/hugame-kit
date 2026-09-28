@@ -90,7 +90,7 @@ Inspect the archive listing before upload and ensure it is at most 50 MiB. A sys
 
 ```sh
 npx hugame dev GAME_FOLDER
-npx hugame dev GAME_FOLDER --port 4173 --no-open
+npx hugame dev GAME_FOLDER --port 1758 --no-open
 ```
 
 The command first validates the package. It serves only package files on loopback, watches valid changes, and reloads the game inside the production-style opaque-origin sandbox. The player injects the real runtime bridge, provides 920 × 575, 390 × 700, and 844 × 390 viewports, sends pause/resume/mute/viewport events, logs runtime activity, and emulates progress and achievements in browser storage. Reset local state when testing first-run behavior. Stop the server with Ctrl+C. Local state is test data and never becomes account data.
@@ -98,9 +98,9 @@ The command first validates the package. It serves only package files on loopbac
 Without the CLI, use the first static-server option already available on the computer, for example:
 
 ```sh
-python3 -m http.server 4173 --directory GAME_FOLDER
-php -S 127.0.0.1:4173 -t GAME_FOLDER
-ruby -run -e httpd GAME_FOLDER -p 4173
+python3 -m http.server 1758 --directory GAME_FOLDER
+php -S 127.0.0.1:1758 -t GAME_FOLDER
+ruby -run -e httpd GAME_FOLDER -p 1758
 ```
 
 If no static server is available, open `index.html` directly; module scripts and some relative-path behavior may differ under `file:` URLs. Then:
@@ -115,22 +115,22 @@ Do not add a replacement or mock `window.Hugame` SDK to the package. Static test
 ## Connect: `login`, `whoami`, `games`, and `logout`
 
 ```sh
-npx hugame login --site https://hugame.dev
-npx hugame login --site https://hugame.dev --name "My computer" --no-open
-npx hugame whoami --site https://hugame.dev
-npx hugame games --site https://hugame.dev
-npx hugame logout --site https://hugame.dev
+HUGAME_URL=https://hugame.dev npx hugame login
+HUGAME_URL=https://hugame.dev npx hugame login --name "My computer" --no-open
+npx hugame whoami
+npx hugame games
+npx hugame logout
 ```
 
-`login` displays a short-lived browser approval URL/code and waits while the account holder signs in and approves that device. Leave it running. Never approve for the user, request their password/token, or print/read the credentials file. Production is `https://hugame.dev`; staging is `https://staging.hugame.dev`. `whoami` returns account information; `games` returns owned games and version IDs. `logout` clears the selected local credential even if the server cannot be reached and reports whether server revocation succeeded.
+`login` displays a short-lived browser approval URL/code and waits while the account holder signs in and approves that device. Leave it running. Never approve for the user, request their password/token, or print/read the credentials file. `HUGAME_URL` selects the origin for login and every other account API command. Production is `https://hugame.dev`; staging is `https://staging.hugame.dev`; HTTP is allowed only for localhost development. A successful login stores its normalized origin as the active site, so later commands can omit the variable. Setting `HUGAME_URL` on a later command overrides the active site, and credentials remain separate by origin. `whoami` returns account information; `games` returns owned games and version IDs. `logout` clears the selected local credential even if the server cannot be reached and reports whether server revocation succeeded.
 
 Without the CLI, sign in normally on the intended website. Use the profile/account page instead of `whoami`, My Games instead of `games`, and Account → Paired devices instead of `logout` when revoking a previously authorized CLI device. Do not emulate device login or authenticated API calls.
 
 ## Transfer: `upload`
 
 ```sh
-npx hugame upload GAME_FOLDER --site https://hugame.dev
-npx hugame upload GAME_FOLDER --game GAME_ID --site https://hugame.dev
+npx hugame upload GAME_FOLDER
+npx hugame upload GAME_FOLDER --game GAME_ID
 ```
 
 The command validates and packs the folder, uploads it with an integrity checksum, and finalizes it. A new upload becomes a private draft and returns a private preview URL. An explicit `--game` or a game association remembered from an earlier upload of the same folder permanently replaces that game's sole current version while preserving visibility, forkability, and other settings. Confirm the exact game ID with `games` and get permission before replacement. The CLI can resume an interrupted finalization, so retry the unchanged folder once before starting another upload.
@@ -140,8 +140,8 @@ Without the CLI, create the ZIP as described under `pack`, sign in on the intend
 ## Share: `publish`
 
 ```sh
-npx hugame publish VERSION_ID --site https://hugame.dev --visibility public --forkable false --yes
-npx hugame publish VERSION_ID --site https://hugame.dev --visibility unlisted --forkable true --yes
+npx hugame publish VERSION_ID --visibility public --forkable false --yes
+npx hugame publish VERSION_ID --visibility unlisted --forkable true --yes
 ```
 
 Publishing requires a game or version ID owned by the connected account and refuses to run without `--yes`. Prefer the preview's version ID. `public` may appear in the arcade; `unlisted` is accessible to anyone with the play link. `--forkable true` permits source-ZIP downloads and changes the game's setting before publication. Omit `--forkable` to preserve its current setting. The CLI does not provide an unpublish command; use My Games for private visibility.
@@ -151,7 +151,7 @@ Without the CLI, open My Games after testing the private preview. Show the user 
 ## Options and output
 
 - `--help` or `-h` prints command help; `--version` reports CLI and schema versions.
-- `--site ORIGIN` selects production, staging, or an allowed localhost development origin for account commands.
+- `HUGAME_URL=ORIGIN` selects production, staging, or an allowed localhost development origin for login and every other account API command. A successful login remembers the site; setting the variable again overrides it.
 - `--json` emits one JSON object per line; login emits a device-authorization object before its final result.
 - `--no-open` prevents `login` or `dev` from opening a browser automatically.
 - `--port NUMBER` selects the `dev` port from 0 through 65535; `0` requests an available port.

@@ -6,10 +6,10 @@ const VERSION = "0.0.2";
 const help = `Hugame CLI ${VERSION} — local games, shared adventures
 
   hugame init [folder]                  Make a Ping Pong starter
-  hugame dev [folder] [--port 4173]     Debug with the local Hugame runtime
+  hugame dev [folder] [--port 1758]     Debug with the local Hugame runtime
   hugame validate [folder]              Check a Hugame package
   hugame pack [folder] [--out file.zip]  Save a reproducible ZIP
-  hugame login --site https://hugame.dev Connect through your browser
+  hugame login                          Connect through your browser
   hugame upload [folder] [--game ID]     Upload a game or replace its version
   hugame publish <game-or-version> --yes [--visibility public|unlisted]
                                        Share after checking the preview
@@ -17,8 +17,9 @@ const help = `Hugame CLI ${VERSION} — local games, shared adventures
   hugame whoami                         Show your account (never the token)
   hugame logout                         Revoke and remove this device login
 
-Options: --site URL, --json, --no-open (login/dev), --port NUMBER (dev), --name LABEL (login),
+Options: --json, --no-open (login/dev), --port NUMBER (dev), --name LABEL (login),
          --visibility public|unlisted, --forkable true|false (publish).
+Environment: HUGAME_URL selects the site origin. A successful login remembers it.
 JSON mode emits one JSON object per line; login first emits a pairing instruction.
 Package schema: Hugame v1. Requires Node.js 22 or later.
 `;
@@ -30,7 +31,6 @@ async function main() {
       help: { type: "boolean", short: "h" },
       version: { type: "boolean" },
       json: { type: "boolean" },
-      site: { type: "string" },
       "no-open": { type: "boolean" },
       game: { type: "string" },
       out: { type: "string" },

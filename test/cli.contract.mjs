@@ -46,13 +46,14 @@ test("CLI distribution retains Hugame and bundled dependency license notices", a
   );
 });
 
-function run(args, directory) {
+function run(args, directory, environment = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [binary, ...args], {
       env: {
         ...process.env,
         HUGAME_CONFIG_DIR: join(directory, "config"),
         HUGAME_URL: "",
+        ...environment,
       },
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -265,6 +266,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
   try {
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     site = `http://127.0.0.1:${server.address().port}`;
+    const siteEnvironment = { HUGAME_URL: site };
     const game = join(directory, "game");
     assert.equal((await run(["init", game, "--json"], directory)).code, 0);
     const manifestPath = join(game, "hugame.json");
@@ -304,7 +306,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       ).code,
       1,
     );
-    const login = await run(["login", "--site", site, "--json"], directory);
+    const login = await run(["login", "--json"], directory, siteEnvironment);
     assert.equal(login.code, 0);
     assert.equal(login.messages[0].type, "device_authorization");
     assert.equal(login.messages[0].verificationUri, `${site}/device?code=ABCD-EFGH`);
@@ -313,7 +315,11 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     const credentialPath = join(directory, "config", "credentials.json");
     if (process.platform !== "win32")
       assert.equal((await stat(credentialPath)).mode & 0o777, 0o600);
-    const upload = await run(["upload", game, "--json"], directory);
+    const upload = await run(
+      ["upload", game, "--json"],
+      directory,
+      siteEnvironment,
+    );
     assert.equal(upload.code, 0);
     assert.equal(upload.messages[0].data.state, "draft");
     assert.equal(
@@ -335,7 +341,13 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       createHash("sha256").update(uploaded).digest("base64"),
     );
     assert.equal(
-      (await run(["publish", versionId, "--json"], directory)).code,
+      (
+        await run(
+          ["publish", versionId, "--json"],
+          directory,
+          siteEnvironment,
+        )
+      ).code,
       1,
     );
     assert.equal(
@@ -354,6 +366,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
         "--json",
       ],
       directory,
+      siteEnvironment,
     );
     assert.equal(published.messages[0].data.url, `${site}/g/pong`);
     const publishRequest = requests.find((request) => request.path.endsWith("/publish"));
@@ -366,7 +379,10 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
 
     // A failed finalization is remembered and retried without another presign or PUT.
     failFinalization = true;
-    assert.equal((await run(["upload", game, "--json"], directory)).code, 1);
+    assert.equal(
+      (await run(["upload", game, "--json"], directory, siteEnvironment)).code,
+      1,
+    );
     const puts = requests.filter(
       (request) => request.path === "/object",
     ).length;
@@ -379,7 +395,11 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
       1,
     );
     failFinalization = false;
-    const replacement = await run(["upload", game, "--json"], directory);
+    const replacement = await run(
+      ["upload", game, "--json"],
+      directory,
+      siteEnvironment,
+    );
     assert.equal(replacement.code, 0);
     assert.match(replacement.messages[0].data.message, /visibility and settings are unchanged/);
     assert.equal(
@@ -392,9 +412,13 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
         .gameId,
       gameId,
     );
-    assert.equal((await run(["whoami", "--json"], directory)).code, 0);
     assert.equal(
-      (await run(["logout", "--json"], directory)).messages[0].data.revoked,
+      (await run(["whoami", "--json"], directory, siteEnvironment)).code,
+      0,
+    );
+    assert.equal(
+      (await run(["logout", "--json"], directory, siteEnvironment)).messages[0]
+        .data.revoked,
       true,
     );
     assert.equal(

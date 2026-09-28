@@ -21,7 +21,6 @@ import { ApiFailure, Client, delay } from "./client";
 import { startDevServer } from "./dev";
 
 export type Options = {
-  site?: string;
   json?: boolean;
   noOpen?: boolean;
   game?: string;
@@ -139,7 +138,7 @@ export async function runCommand(
   }
   if (command === "dev") {
     const directory = await realpath(resolve(argument ?? "."));
-    const port = options.port === undefined ? 4173 : Number(options.port);
+    const port = options.port === undefined ? 1758 : Number(options.port);
     if (!Number.isInteger(port) || port < 0 || port > 65535)
       throw new Error("Use a port number from 0 to 65535.");
     const server = await startDevServer(directory, port);
@@ -154,7 +153,7 @@ export async function runCommand(
   }
 
   const config = await readConfig();
-  const site = selectedSite(config, options.site);
+  const site = selectedSite(config);
   if (command === "login") {
     const client = new Client(site);
     const start = await client.request<{

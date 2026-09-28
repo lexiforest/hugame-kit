@@ -112,9 +112,11 @@ export function normalizeSite(value: string): string {
   return url.origin;
 }
 
-export function selectedSite(config: CliConfig, option?: string): string {
-  const value = option ?? (process.env.HUGAME_URL || config.activeSite);
+export function selectedSite(config: CliConfig): string {
+  const value = process.env.HUGAME_URL || config.activeSite;
   if (!value)
-    throw new Error("First run hugame login --site https://hugame.dev.");
+    throw new Error(
+      "Set HUGAME_URL=https://hugame.dev, then run hugame login.",
+    );
   return normalizeSite(value);
 }
