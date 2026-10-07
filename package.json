@@ -11,6 +11,7 @@
     "build": "npm run build:cli && npm run build:downloads",
     "build:cli": "node scripts/build-cli.mjs",
     "build:downloads": "tsx scripts/build-downloads.ts",
+    "prepare:examples": "node scripts/prepare-demo-games.mjs",
     "test": "npm run typecheck && npm run test:cli",
     "test:cli": "npm run build:cli && node --test test/cli.contract.mjs",
     "typecheck": "tsc --noEmit"
@@ -21,6 +22,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.3.0",
     "@types/yauzl": "^3.4.0",
     "@types/yazl": "^3.3.1",

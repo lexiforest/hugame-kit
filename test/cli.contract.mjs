@@ -90,7 +90,7 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
   const game = join(directory, "game");
   let child;
   try {
-    assert.equal((await run(["init", game, "--json"], directory)).code, 0);
+    assert.equal((await run(["init", game], directory)).code, 0);
     const starterManifest = JSON.parse(
       await readFile(join(game, "hugame.json"), "utf8"),
     );
@@ -98,7 +98,7 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
     assert.match(starterManifest.homepage, /^https:\/\//);
     child = spawn(
       process.execPath,
-      [binary, "dev", game, "--port", "0", "--no-open", "--json"],
+      [binary, "dev", game, "--port", "0", "--no-open"],
       {
         env: {
           ...process.env,
@@ -268,26 +268,26 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     site = `http://127.0.0.1:${server.address().port}`;
     const siteEnvironment = { HUGAME_URL: site };
     const game = join(directory, "game");
-    assert.equal((await run(["init", game, "--json"], directory)).code, 0);
+    assert.equal((await run(["init", game], directory)).code, 0);
     const manifestPath = join(game, "hugame.json");
     const initializedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
     const missingDisplay = { ...initializedManifest };
     delete missingDisplay.display;
     await writeFile(manifestPath, JSON.stringify(missingDisplay, null, 2) + "\n");
-    assert.equal((await run(["validate", game, "--json"], directory)).code, 1);
+    assert.equal((await run(["validate", game], directory)).code, 1);
     await writeFile(manifestPath, JSON.stringify(initializedManifest, null, 2) + "\n");
     assert.equal(
-      (await run(["init", game, "--json"], directory)).code,
+      (await run(["init", game], directory)).code,
       1,
       "must not overwrite an existing project",
     );
-    const validation = await run(["validate", game, "--json"], directory);
+    const validation = await run(["validate", game], directory);
     assert.equal(validation.messages[0].data.valid, true);
     for (const name of ["one.zip", "two.zip"])
       assert.equal(
         (
           await run(
-            ["pack", game, "--out", join(directory, name), "--json"],
+            ["pack", game, "--out", join(directory, name)],
             directory,
           )
         ).code,
@@ -300,13 +300,17 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     assert.equal(
       (
         await run(
-          ["pack", game, "--out", join(game, "bad.zip"), "--json"],
+          ["pack", game, "--out", join(game, "bad.zip")],
           directory,
         )
       ).code,
       1,
     );
-    const login = await run(["login", "--json"], directory, siteEnvironment);
+    const login = await run(
+      ["login", "--no-open"],
+      directory,
+      siteEnvironment,
+    );
     assert.equal(login.code, 0);
     assert.equal(login.messages[0].type, "device_authorization");
     assert.equal(login.messages[0].verificationUri, `${site}/device?code=ABCD-EFGH`);
@@ -316,7 +320,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     if (process.platform !== "win32")
       assert.equal((await stat(credentialPath)).mode & 0o777, 0o600);
     const upload = await run(
-      ["upload", game, "--json"],
+      ["upload", game],
       directory,
       siteEnvironment,
     );
@@ -343,7 +347,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     assert.equal(
       (
         await run(
-          ["publish", versionId, "--json"],
+          ["publish", versionId],
           directory,
           siteEnvironment,
         )
@@ -363,7 +367,6 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
         "unlisted",
         "--forkable",
         "true",
-        "--json",
       ],
       directory,
       siteEnvironment,
@@ -380,7 +383,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     // A failed finalization is remembered and retried without another presign or PUT.
     failFinalization = true;
     assert.equal(
-      (await run(["upload", game, "--json"], directory, siteEnvironment)).code,
+      (await run(["upload", game], directory, siteEnvironment)).code,
       1,
     );
     const puts = requests.filter(
@@ -396,7 +399,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     );
     failFinalization = false;
     const replacement = await run(
-      ["upload", game, "--json"],
+      ["upload", game],
       directory,
       siteEnvironment,
     );
@@ -412,12 +415,12 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
         .gameId,
       gameId,
     );
+    const info = await run(["info"], directory, siteEnvironment);
+    assert.equal(info.code, 0);
+    assert.equal(info.messages[0].data.account.name, "Test Creator");
+    assert.equal(info.messages[0].data.games[0].id, gameId);
     assert.equal(
-      (await run(["whoami", "--json"], directory, siteEnvironment)).code,
-      0,
-    );
-    assert.equal(
-      (await run(["logout", "--json"], directory, siteEnvironment)).messages[0]
+      (await run(["logout"], directory, siteEnvironment)).messages[0]
         .data.revoked,
       true,
     );

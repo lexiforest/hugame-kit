@@ -4,7 +4,7 @@ const startButton = document.querySelector("#start");
 const playerLabel = document.querySelector("#player-score");
 const cpuLabel = document.querySelector("#cpu-score");
 const status = document.querySelector("#status");
-const { playSound } = window.PingPongSound;
+const { playSound: playGameSound } = window.PingPongSound;
 const keys = new Set();
 const paddle = { width: 14, height: 92 };
 let playerY = 154;
@@ -33,7 +33,7 @@ function serve(direction = Math.random() < 0.5 ? -1 : 1) {
 
 function newGame() {
   if (hostPaused) return;
-  playSound("start");
+  playGameSound("start");
   playerY = cpuY = (canvas.height - paddle.height) / 2;
   playerScore = 0;
   cpuScore = 0;
@@ -48,7 +48,7 @@ function newGame() {
 function finish() {
   playing = false;
   const won = playerScore > cpuScore;
-  playSound(won ? "success" : "failure");
+  playGameSound(won ? "success" : "failure");
   status.textContent = won
     ? "You won the match! Choose New game for another."
     : "The computer won this one. Ready for a rematch?";
@@ -58,7 +58,10 @@ function finish() {
 
 function movePlayer(amount) {
   if (hostPaused) return;
-  playerY = Math.max(0, Math.min(canvas.height - paddle.height, playerY + amount));
+  playerY = Math.max(
+    0,
+    Math.min(canvas.height - paddle.height, playerY + amount),
+  );
   draw();
   canvas.focus();
 }
@@ -66,7 +69,9 @@ function movePlayer(amount) {
 document
   .querySelectorAll("[data-move]")
   .forEach((button) =>
-    button.addEventListener("click", () => movePlayer(Number(button.dataset.move) * 48)),
+    button.addEventListener("click", () =>
+      movePlayer(Number(button.dataset.move) * 48),
+    ),
   );
 startButton.addEventListener("click", newGame);
 canvas.addEventListener("keydown", (event) => {
@@ -76,7 +81,9 @@ canvas.addEventListener("keydown", (event) => {
     keys.add(event.key.toLowerCase());
   }
 });
-canvas.addEventListener("keyup", (event) => keys.delete(event.key.toLowerCase()));
+canvas.addEventListener("keyup", (event) =>
+  keys.delete(event.key.toLowerCase()),
+);
 canvas.addEventListener("blur", () => keys.clear());
 canvas.addEventListener("pointerdown", moveToPointer);
 canvas.addEventListener("pointermove", (event) => {
@@ -87,12 +94,15 @@ function moveToPointer(event) {
   if (hostPaused) return;
   const bounds = canvas.getBoundingClientRect();
   const y = ((event.clientY - bounds.top) / bounds.height) * canvas.height;
-  playerY = Math.max(0, Math.min(canvas.height - paddle.height, y - paddle.height / 2));
+  playerY = Math.max(
+    0,
+    Math.min(canvas.height - paddle.height, y - paddle.height / 2),
+  );
   canvas.focus();
 }
 
 function bouncePaddle(x, y, side) {
-  playSound("action");
+  playGameSound("action");
   const center = y + paddle.height / 2;
   const offset = (ball.y - center) / (paddle.height / 2);
   ball.vx = Math.abs(ball.vx) * side * 1.035;
@@ -138,7 +148,7 @@ function update(dt) {
     window.Hugame?.score(playerScore);
     if (playerScore >= 7 || cpuScore >= 7) finish();
     else {
-      playSound(playerWon ? "collect" : "failure");
+      playGameSound(playerWon ? "collect" : "failure");
       serve(playerWon ? -1 : 1);
     }
   }
@@ -185,7 +195,8 @@ function draw() {
 }
 
 function tick(now) {
-  const dt = !hostPaused && previous ? Math.min(0.035, (now - previous) / 1000) : 0;
+  const dt =
+    !hostPaused && previous ? Math.min(0.035, (now - previous) / 1000) : 0;
   previous = now;
   if (!hostPaused) {
     if (playing) update(dt);

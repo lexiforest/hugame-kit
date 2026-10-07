@@ -25,7 +25,9 @@ The examples intentionally demonstrate both supported ways to bundle sound while
 
 Both approaches expose the same `playSound(...)` helper, start audio only after player input, and respond to the Hugame `mute` event. Regenerate the WAV files with `node scripts/generate-example-sounds.mjs` from the repository root.
 
-From the sibling `hugame` repository, `node scripts/prepare-demo-games.mjs` regenerates covers and checks keyboard/touch controls, restart, narrow layouts, round endings, and 2048 merge rules using Chromium.
+From the Hugame Kit repository root, run `npm ci` and `npx playwright install chromium` once.
+Then `npm run prepare:examples` regenerates covers and checks keyboard/touch controls, restart,
+narrow layouts, round endings, and 2048 merge rules using Chromium.
 
 With the local app on port 3000 and container services running, run `npx tsx scripts/seed-local-games.ts` from the sibling `hugame` repository. It validates/packages these games, creates fictional `.test` demo accounts as needed, uploads private drafts, and checks their authenticated previews. It refuses non-local storage URLs and verifies the account exists in the container database. Rerunning creates new versions of the same saved game IDs, not new game cards. It never publishes.
 

@@ -12,7 +12,7 @@ Keep the full error's file path and code when diagnosing. Change the game packag
 | ZIP too large                       | Compress images/audio and remove unused assets; do not split a game into remote downloads.                               |
 | Login pending                       | Leave the CLI running while the account holder approves the displayed code in the browser.                               |
 | Expired or denied login             | Stop. Let the account holder decide whether to start a new login.                                                        |
-| Wrong account or missing scope      | Check `npx hugame whoami`; reconnect through the browser with the intended account. Never borrow another person's token. |
+| Wrong account or missing scope      | Check `npx hugame info`; reconnect through the browser with the intended account. Never borrow another person's token. |
 | Upload interrupted                  | Retry the unchanged folder once. If it still fails, inspect the error and owned games before creating another upload.    |
 | Works locally, fails in preview     | Inspect browser errors for blocked network calls, storage access, absolute paths, and missing bundled files.             |
 | Replacement is not on the play page | Confirm the existing game ID was used, then reload the play page. A successful replacement keeps the same play link.   |

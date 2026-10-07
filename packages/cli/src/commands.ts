@@ -21,7 +21,6 @@ import { ApiFailure, Client, delay } from "./client";
 import { startDevServer } from "./dev";
 
 export type Options = {
-  json?: boolean;
   noOpen?: boolean;
   game?: string;
   out?: string;
@@ -147,7 +146,7 @@ export async function runCommand(
       data: { url: server.url, directory },
       message: `Hugame dev is running at ${server.url}. Press Ctrl+C to stop.`,
     });
-    if (!options.noOpen && !options.json) openBrowser(server.url);
+    if (!options.noOpen) openBrowser(server.url);
     await server.waitForShutdown();
     return { stopped: true, url: server.url };
   }
@@ -182,7 +181,7 @@ export async function runCommand(
       message:
         "Sign in in your browser, enter this code, and approve this device. Leave this command running.",
     });
-    if (!options.noOpen && !options.json) openBrowser(verification.href);
+    if (!options.noOpen) openBrowser(verification.href);
     const expires = Date.now() + Math.min(start.expiresIn, 600) * 1000;
     let interval = Math.max(5, Math.min(start.interval, 60));
     while (Date.now() < expires) {
@@ -255,8 +254,13 @@ export async function runCommand(
   }
 
   const client = authenticated(config, site);
-  if (command === "whoami") return client.request("/api/me");
-  if (command === "games") return client.request("/api/me/games");
+  if (command === "info") {
+    const [account, games] = await Promise.all([
+      client.request("/api/me"),
+      client.request<OwnedGame[]>("/api/me/games"),
+    ]);
+    return { account, games };
+  }
   if (command === "upload") {
     const directory = await realpath(resolve(argument ?? "."));
     const archive = await packDirectory(directory);
@@ -266,7 +270,7 @@ export async function runCommand(
     const gameId = options.game ?? saved.gameId;
     const replacing = Boolean(gameId);
     if (gameId && !/^[a-f0-9]{24}$/.test(gameId))
-      throw new Error("Use the game ID shown by hugame games.");
+      throw new Error("Use the game ID shown by hugame info.");
     let uploadId =
       saved.checksum === digest && saved.gameId === gameId
         ? saved.uploadId

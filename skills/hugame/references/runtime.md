@@ -12,7 +12,7 @@ window.Hugame?.gameOver({ score: 42 });
 
 Declare the `scores` capability and matching score settings in the manifest before using scores. Send a score when it changes, not every animation frame. Send `gameOver({ score: finalScore })` once per finished round. Scores must be finite numbers within the runtime's supported bounds; use small nonnegative integers for ordinary point-based games.
 
-Guests can play but cannot save leaderboard scores. Leaderboards are per published version and keep the player's best score according to the manifest's order. Scores are client-reported and not cheat-proof; do not promise secure competitions or prizes.
+Guests can play but cannot save leaderboard scores. Each game has one permanent leaderboard across version replacements and keeps the player's best score according to the manifest's order. The saved version ID records which build produced that score; it does not create a separate leaderboard. Scores are client-reported and not cheat-proof; do not promise secure competitions or prizes.
 
 The site verifies the sending frame and game/version identifiers. Scores are signed 32-bit integers from −2,147,483,648 through 2,147,483,647. Omitting the score uses the last reported value.
 

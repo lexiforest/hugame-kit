@@ -24,8 +24,7 @@ Local creation, inspection, validation, packing, and testing do not need a Hugam
 | `login` | Starts browser device authorization and stores a scoped device credential. | Sign in on the website. This does not create CLI credentials, but it enables web upload and management. |
 | `upload [folder]` | Validates, packs, uploads, and finalizes a new private draft or replacement. | Create a ZIP and use the website's Upload page. |
 | `publish <game-or-version>` | Shares a checked version as public or unlisted after explicit `--yes`. | Use My Games after checking the private preview and confirming visibility/download settings. |
-| `games` | Lists the signed-in account's games and version IDs. | Open My Games on the website. |
-| `whoami` | Shows the current account without exposing its token. | Open the account/profile page on the selected site. |
+| `info` | Shows the signed-in account plus owned games and version IDs without exposing its token. | Open the account/profile page and My Games on the selected site. |
 | `logout` | Tries to revoke the device credential, then removes it locally even if revocation fails. | Revoke the device under Account → Paired devices. Website sign-out alone does not clear a CLI credential on another computer. |
 
 ## Create: `init`
@@ -42,7 +41,6 @@ Without the CLI, copy the contents of this skill's `assets/ping-pong/` directory
 
 ```sh
 npx hugame validate GAME_FOLDER
-npx hugame validate GAME_FOLDER --json
 ```
 
 Validation is read-only. It checks package layout, paths, file count and sizes, file signatures, JSON and manifest rules, the cover, local references, and common unsafe HTML/JavaScript patterns. A successful result reports the title, file count, extracted bytes, and schema version. It does not play the game.
@@ -112,19 +110,18 @@ If no static server is available, open `index.html` directly; module scripts and
 
 Do not add a replacement or mock `window.Hugame` SDK to the package. Static testing cannot reproduce the Hugame sandbox, runtime event controls, score submission, saves, achievements, or runtime log. Test those in `npx hugame dev` when Node becomes available or in a private uploaded preview. State exactly which path was tested.
 
-## Connect: `login`, `whoami`, `games`, and `logout`
+## Connect: `login`, `info`, and `logout`
 
 ```sh
 HUGAME_URL=https://hugame.dev npx hugame login
 HUGAME_URL=https://hugame.dev npx hugame login --name "My computer" --no-open
-npx hugame whoami
-npx hugame games
+npx hugame info
 npx hugame logout
 ```
 
-`login` displays a short-lived browser approval URL/code and waits while the account holder signs in and approves that device. Leave it running. Never approve for the user, request their password/token, or print/read the credentials file. `HUGAME_URL` selects the origin for login and every other account API command. Production is `https://hugame.dev`; staging is `https://staging.hugame.dev`; HTTP is allowed only for localhost development. A successful login stores its normalized origin as the active site, so later commands can omit the variable. Setting `HUGAME_URL` on a later command overrides the active site, and credentials remain separate by origin. `whoami` returns account information; `games` returns owned games and version IDs. `logout` clears the selected local credential even if the server cannot be reached and reports whether server revocation succeeded.
+`login` displays a short-lived browser approval URL/code and waits while the account holder signs in and approves that device. Leave it running. Never approve for the user, request their password/token, or print/read the credentials file. `HUGAME_URL` selects the origin for login and every other account API command. Production is `https://hugame.dev`; staging is `https://staging.hugame.dev`; HTTP is allowed only for localhost development. A successful login stores its normalized origin as the active site, so later commands can omit the variable. Setting `HUGAME_URL` on a later command overrides the active site, and credentials remain separate by origin. `info` returns the account plus owned games and version IDs. `logout` clears the selected local credential even if the server cannot be reached and reports whether server revocation succeeded.
 
-Without the CLI, sign in normally on the intended website. Use the profile/account page instead of `whoami`, My Games instead of `games`, and Account → Paired devices instead of `logout` when revoking a previously authorized CLI device. Do not emulate device login or authenticated API calls.
+Without the CLI, sign in normally on the intended website. Use the profile/account page and My Games instead of `info`, and Account → Paired devices instead of `logout` when revoking a previously authorized CLI device. Do not emulate device login or authenticated API calls.
 
 ## Transfer: `upload`
 
@@ -133,7 +130,7 @@ npx hugame upload GAME_FOLDER
 npx hugame upload GAME_FOLDER --game GAME_ID
 ```
 
-The command validates and packs the folder, uploads it with an integrity checksum, and finalizes it. A new upload becomes a private draft and returns a private preview URL. An explicit `--game` or a game association remembered from an earlier upload of the same folder permanently replaces that game's sole current version while preserving visibility, forkability, and other settings. Confirm the exact game ID with `games` and get permission before replacement. The CLI can resume an interrupted finalization, so retry the unchanged folder once before starting another upload.
+The command validates and packs the folder, uploads it with an integrity checksum, and finalizes it. A new upload becomes a private draft and returns a private preview URL. An explicit `--game` or a game association remembered from an earlier upload of the same folder permanently replaces that game's sole current version while preserving visibility, forkability, and other settings. Confirm the exact game ID with `info` and get permission before replacement. The CLI can resume an interrupted finalization, so retry the unchanged folder once before starting another upload.
 
 Without the CLI, create the ZIP as described under `pack`, sign in on the intended site, and use Upload. For a replacement, open My Games and choose that game's Replace action so the page includes its game ID; confirm the warning before uploading. Do not use a plain new upload when the intent is to replace an existing game. Check the returned private preview or live play page as appropriate.
 
@@ -152,7 +149,7 @@ Without the CLI, open My Games after testing the private preview. Show the user 
 
 - `--help` or `-h` prints command help; `--version` reports CLI and schema versions.
 - `HUGAME_URL=ORIGIN` selects production, staging, or an allowed localhost development origin for login and every other account API command. A successful login remembers the site; setting the variable again overrides it.
-- `--json` emits one JSON object per line; login emits a device-authorization object before its final result.
+- Every output line is JSON. Login emits a device-authorization object before its final result.
 - `--no-open` prevents `login` or `dev` from opening a browser automatically.
 - `--port NUMBER` selects the `dev` port from 0 through 65535; `0` requests an available port.
 - `--name LABEL` labels the device during login.
@@ -160,4 +157,4 @@ Without the CLI, open My Games after testing the private preview. Show the user 
 - `--game GAME_ID` selects the existing game replaced by upload.
 - `--visibility public|unlisted`, `--forkable true|false`, and `--yes` control publication.
 
-When no CLI is available, there is no equivalent to `--json`; report observations in plain text and never imply machine validation or an authenticated command succeeded.
+When no CLI is available, report observations in plain text and never imply machine validation or an authenticated command succeeded.
