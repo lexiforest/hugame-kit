@@ -1,4 +1,4 @@
-import { runtimeActionSchema, type RuntimeAction } from "./player-state";
+import { runtimeActionSchema, type RuntimeAction } from "./runtime-action";
 
 export type RuntimeIdentity = { gameId: string; versionId: string };
 export type RuntimeMessage = RuntimeIdentity & {
