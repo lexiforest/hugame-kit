@@ -149,7 +149,7 @@ Without the CLI, open My Games after testing the private preview. Show the user 
 
 - `--help` or `-h` prints command help; `--version` reports CLI and schema versions.
 - `HUGAME_URL=ORIGIN` selects production, staging, or an allowed localhost development origin for login and every other account API command. A successful login remembers the site; setting the variable again overrides it.
-- Every output line is JSON. Login emits a device-authorization object before its final result.
+- Command results are JSON. `--help` and `-h` print plain text. Login emits a device-authorization object before its final result.
 - `--no-open` prevents `login` or `dev` from opening a browser automatically.
 - `--port NUMBER` selects the `dev` port from 0 through 65535; `0` requests an available port.
 - `--name LABEL` labels the device during login.

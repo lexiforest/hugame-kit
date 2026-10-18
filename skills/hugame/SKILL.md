@@ -15,7 +15,7 @@ Prefer the Hugame CLI for local creation, package checks, the sandboxed developm
 
 First run `node --version`. The CLI requires Node.js 22 or later.
 
-- If Node.js 22 or later is installed, prefer `npx hugame` for every CLI operation. Start with `npx hugame --version`; this skill targets CLI 0.0.2 and package schema 1. Use the `hugame` package, not an unrelated similarly named package. A `hugame-kit` source checkout can instead build its local CLI with `npm run build:cli`.
+- If Node.js 22 or later is installed, prefer `npx hugame` for every CLI operation. Start with `npx hugame --version`; this skill targets CLI 0.0.3 and package schema 1. Use the `hugame` package, not an unrelated similarly named package. A `hugame-kit` source checkout can instead build its local CLI with `npm run build:cli`.
 - If Node.js is missing or older than 22, keep working without the CLI. Perform the documented text-based package check and use browser/site alternatives. State clearly which CLI-only checks were not exercised. Do not install Node unless the user asks.
 
 Read [CLI commands and no-CLI workflows](references/commands.md) for the requested operation. It covers every command, option, default, side effect, and fallback boundary. Also read [package format](references/package.md) when creating, validating, or packing; [runtime bridge](references/runtime.md) when testing gameplay or SDK behavior; and [troubleshooting](references/troubleshooting.md) when a check or site operation fails.
@@ -34,7 +34,7 @@ With compatible Node.js, use `npx hugame init my-game` for a new starter. Withou
 4. With permission to upload, run `npx hugame upload GAME_FOLDER`. A new game starts as a private draft. For an existing game, confirm its ID with `npx hugame info`, explain that uploading replaces the live version immediately while preserving its visibility and settings, and wait for confirmation before passing `--game GAME_ID`; do not silently create a duplicate.
 5. Give the user the returned preview link. For a new game, check the private preview before publishing. For a replacement, also check its existing play link because the new version is already live when the game is public or unlisted. Otherwise ask the user to test it and accurately state that you have not verified it.
 
-Every CLI output line is JSON. Login emits a device-authorization event before the final result. Never print or read the credentials file into the conversation, commit it, or include it in a game package.
+CLI command results are JSON, while `--help` and `-h` print plain text. Login emits a device-authorization event before the final result. Never print or read the credentials file into the conversation, commit it, or include it in a game package.
 
 ## Publish only after confirmation
 

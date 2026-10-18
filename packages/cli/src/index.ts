@@ -1,7 +1,6 @@
 import { parseArgs } from "node:util";
+import { version as VERSION } from "../package.json";
 import { runCommand } from "./commands";
-
-const VERSION = "0.0.2";
 
 const help = `Hugame CLI ${VERSION} — local games, shared adventures
 
@@ -19,7 +18,7 @@ const help = `Hugame CLI ${VERSION} — local games, shared adventures
 Options: --no-open (login/dev), --port NUMBER (dev), --name LABEL (login),
          --visibility public|unlisted, --forkable true|false (publish).
 Environment: HUGAME_URL selects the site origin. A successful login remembers it.
-Every output line is JSON; login first emits a device-authorization event.
+Command results are JSON; help is plain text. Login first emits a device-authorization event.
 Package schema: Hugame v1. Requires Node.js 22 or later.
 `;
 
@@ -48,7 +47,7 @@ async function main() {
     return;
   }
   if (values.help || !positionals[0]) {
-    emit({ type: "complete", data: { help } });
+    process.stdout.write(help);
     return;
   }
   if (positionals.length > 2)

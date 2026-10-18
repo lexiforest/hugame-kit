@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, stat, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -12,6 +12,27 @@ const binary = resolve("packages/cli/dist/hugame.cjs");
 const token = `hg_${"t".repeat(43)}`;
 const gameId = "a".repeat(24);
 const versionId = "b".repeat(24);
+
+test("CLI help is plain text and version comes from package metadata", async () => {
+  const { version } = JSON.parse(
+    await readFile("packages/cli/package.json", "utf8"),
+  );
+  for (const option of ["-h", "--help"]) {
+    const result = spawnSync(process.execPath, [binary, option], {
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 0);
+    assert.equal(result.stderr, "");
+    assert.match(result.stdout, new RegExp(`^Hugame CLI ${version} —`));
+    assert.doesNotMatch(result.stdout, /^\s*\{/);
+  }
+  const result = spawnSync(process.execPath, [binary, "--version"], {
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  assert.equal(JSON.parse(result.stdout).data.version, version);
+});
 
 test("CLI distribution retains Hugame and bundled dependency license notices", async () => {
   const manifest = JSON.parse(
