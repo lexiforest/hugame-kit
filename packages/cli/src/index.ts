@@ -17,7 +17,7 @@ const help = `Hugame CLI ${VERSION} — local games, shared adventures
 
 Options: --no-open (login/dev), --port NUMBER (dev), --name LABEL (login),
          --visibility public|unlisted, --forkable true|false (publish).
-Environment: HUGAME_URL selects the site origin. A successful login remembers it.
+Environment: HUGAME_URL overrides the site origin; the default is https://hugame.dev.
 Command results are JSON; help is plain text. Login first emits a device-authorization event.
 Package schema: Hugame v1. Requires Node.js 22 or later.
 `;

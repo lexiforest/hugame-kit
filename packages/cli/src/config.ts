@@ -24,6 +24,8 @@ export type CliConfig = {
   projects: Record<string, ProjectLink>;
 };
 
+export const DEFAULT_SITE = "https://hugame.dev";
+
 export function configDirectory() {
   return process.env.HUGAME_CONFIG_DIR ?? join(homedir(), ".config", "hugame");
 }
@@ -113,10 +115,6 @@ export function normalizeSite(value: string): string {
 }
 
 export function selectedSite(config: CliConfig): string {
-  const value = process.env.HUGAME_URL || config.activeSite;
-  if (!value)
-    throw new Error(
-      "Set HUGAME_URL=https://hugame.dev, then run hugame login.",
-    );
+  const value = process.env.HUGAME_URL || config.activeSite || DEFAULT_SITE;
   return normalizeSite(value);
 }

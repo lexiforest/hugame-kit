@@ -11,7 +11,10 @@ Keep the full error's file path and code when diagnosing. Change the game packag
 | Unsupported or hidden file          | Keep build configs, .git, node_modules, secrets, and source-only files outside the export folder.                        |
 | ZIP too large                       | Compress images/audio and remove unused assets; do not split a game into remote downloads.                               |
 | Login pending                       | Leave the CLI running while the account holder approves the displayed code in the browser.                               |
-| Expired or denied login             | Stop. Let the account holder decide whether to start a new login.                                                        |
+| Missing, expired, or revoked credential | Run `npx hugame login` once for the selected site and wait for browser approval, then resume the authorized operation. |
+| Login denied or approval code expired | Stop; do not start another pairing automatically. Let the account holder decide whether to retry. |
+| Network or server failure           | Diagnose the connection/server error. Keep the saved login; do not re-pair the device. |
+| Public publication needs a birthday or age 13+ | Explain that only Public requires a saved birthday and age 13 or older. Login, upload, and Unlisted sharing remain available; do not re-pair or silently change visibility. |
 | Wrong account or missing scope      | Check `npx hugame info`; reconnect through the browser with the intended account. Never borrow another person's token. |
 | Upload interrupted                  | Retry the unchanged folder once. If it still fails, inspect the error and owned games before creating another upload.    |
 | Works locally, fails in preview     | Inspect browser errors for blocked network calls, storage access, absolute paths, and missing bundled files.             |

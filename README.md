@@ -46,11 +46,12 @@ node packages/cli/dist/hugame.cjs init my-game
 node packages/cli/dist/hugame.cjs dev my-game
 ```
 
-Set `HUGAME_URL` to select the production, staging, or local server for login
-and the other account APIs. A successful login remembers that site for later
-commands; setting `HUGAME_URL` again overrides the remembered site.
+Account commands use `https://hugame.dev` by default. Advanced users can set
+`HUGAME_URL` to a custom Hugame-compatible origin; a successful login remembers
+that site for later commands, and setting the variable again overrides it.
+Custom origins must use HTTPS, except that HTTP is allowed for localhost
+development.
 
 ```sh
 HUGAME_URL=http://localhost:3000 node packages/cli/dist/hugame.cjs login
-HUGAME_URL=https://staging.hugame.dev node packages/cli/dist/hugame.cjs login
 ```

@@ -290,6 +290,12 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
     const siteEnvironment = { HUGAME_URL: site };
     const game = join(directory, "game");
     assert.equal((await run(["init", game], directory)).code, 0);
+    const defaultSite = await run(["info"], directory);
+    assert.equal(defaultSite.code, 1);
+    assert.equal(
+      defaultSite.messages[0].error.message,
+      "Your device login is missing or expired. Run hugame login again.",
+    );
     const manifestPath = join(game, "hugame.json");
     const initializedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
     const missingDisplay = { ...initializedManifest };
@@ -436,7 +442,7 @@ test("CLI contracts: scaffold, deterministic ZIP, device login, private upload, 
         .gameId,
       gameId,
     );
-    const info = await run(["info"], directory, siteEnvironment);
+    const info = await run(["info"], directory);
     assert.equal(info.code, 0);
     assert.equal(info.messages[0].data.account.name, "Test Creator");
     assert.equal(info.messages[0].data.games[0].id, gameId);
