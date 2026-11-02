@@ -158,6 +158,9 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
     const parent = await (await fetch(ready.url)).text();
     assert.match(parent, /Local runtime/);
     assert.match(parent, /Reset progress and achievements/);
+    assert.match(parent, /id="touch-input"/);
+    assert.match(parent, /data-touch="true"/);
+    assert.match(parent, /type: "TOUCH"/);
     const runtimePath = parent.match(/<iframe[^>]+src="([^"?]+)/)?.[1];
     assert.match(runtimePath, /^\/game\/[A-Za-z0-9_-]+\/index\.html$/);
     const runtime = await (await fetch(`${ready.url}${runtimePath}`)).text();
@@ -166,6 +169,8 @@ test("CLI dev server injects the production bridge and reloads valid changes", a
         runtime.indexOf("Pocket Pong"),
     );
     assert.doesNotMatch(runtime, /resize:\s*function/);
+    assert.match(runtime, /m\.type === "TOUCH"/);
+    assert.match(runtime, /pointerType: "touch"/);
     assert.equal((await fetch(`${ready.url}/../package.json`)).status, 404);
     assert.equal((await fetch(`${ready.url}/game/index.html`)).status, 404);
     const first = await (await fetch(`${ready.url}/__hugame/status`)).json();

@@ -38,6 +38,26 @@ npm run build
 
 Build output is written to `packages/cli/dist` and `release`. A local build does not mean the CLI or skill has been published. Release only reviewed artifacts from a tagged commit.
 
+### Release tag checks
+
+Set the root and all workspace package versions together before a release:
+
+```sh
+npm run version:bump -- 0.0.6
+```
+
+This also synchronizes `package-lock.json`. It does not create a commit or tag.
+The game package schema version is independent and stays unchanged.
+
+Run `npm run hooks:install` once per clone to enable the repository's Git hooks.
+This sets the clone's `core.hooksPath` to `.githooks`; if you already use custom
+hooks, integrate `.githooks/pre-push` with them instead.
+The pre-push hook checks each pushed `v*` tag against
+`packages/cli/package.json` in the tagged commit, including annotated tags.
+Commit the version bump before tagging. A pre-commit hook cannot check a tag
+that will be created later. GitHub Actions also enforces this check for pushes
+that bypass local hooks.
+
 ### Try the CLI from source
 
 ```sh

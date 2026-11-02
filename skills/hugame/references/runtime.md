@@ -33,7 +33,7 @@ Readiness is also sent on DOMContentLoaded.
 
 ## Local debugging
 
-With Node.js 22 or later, run `npx hugame dev GAME_FOLDER` instead of adding a mock SDK to the game. The loopback player injects the production bridge and sandbox, reloads after valid file changes, logs runtime calls, emulates progress and achievements in browser storage, and provides lifecycle and viewport controls. Use its reset control to test a new player. Local state is only for debugging and never becomes a Hugame account save or achievement. Without compatible Node.js, test the static game directly and state that the Hugame bridge and sandbox were not exercised. See [CLI commands and no-CLI workflows](commands.md#test-dev) for the static-server and browser checklist. A private uploaded preview remains the final check before publication.
+With Node.js 22 or later, run `npx hugame dev GAME_FOLDER` instead of adding a mock SDK to the game. The loopback player injects the production bridge and sandbox, reloads after valid file changes, logs runtime calls, emulates progress and achievements in browser storage, and provides lifecycle and viewport controls. Desktop mode uses mouse input; phone modes translate input to touch semantics, including Pointer Events whose `pointerType` is `touch`. Use its reset control to test a new player. Local state is only for debugging and never becomes a Hugame account save or achievement. Without compatible Node.js, test the static game directly and state that the Hugame bridge and sandbox were not exercised. See [CLI commands and no-CLI workflows](commands.md#test-dev) for the static-server and browser checklist. A private uploaded preview remains the final check before publication.
 
 ## Progress
 

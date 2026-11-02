@@ -84,6 +84,8 @@ function hostHtml(
     .workspace { padding: 20px; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; }
     .stage { position: relative; flex: none; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid #36506f; border-radius: 16px; background: #02060b; box-shadow: 0 18px 70px #0008; }
     iframe { flex: none; border: 0; background: #fff; transform-origin: center; }
+    .touch-input { position: absolute; inset: 0; z-index: 1; display: none; touch-action: none; }
+    .touch-input.active { display: block; }
     .badge { display: inline-block; margin-bottom: 14px; padding: 4px 8px; border-radius: 999px; background: #164835; color: #9ff4c4; font-size: 12px; font-weight: 700; }
     @media (max-width: 760px) { .app { grid-template-columns: 1fr; } .panel { border-right: 0; border-bottom: 1px solid #29405d; } .workspace { justify-content: flex-start; } }
   </style>
@@ -97,9 +99,9 @@ function hostHtml(
       <h2>Viewport</h2>
       <div class="controls">
         <select id="viewport" aria-label="Viewport">
-          <option value="920,575">Desktop · 920 × 575</option>
-          <option value="390,700">Phone portrait · 390 × 700</option>
-          <option value="844,390">Phone landscape · 844 × 390</option>
+          <option value="920,575" data-touch="false">Desktop · 920 × 575</option>
+          <option value="390,700" data-touch="true">Phone portrait · 390 × 700</option>
+          <option value="844,390" data-touch="true">Phone landscape · 844 × 390</option>
         </select>
         <button id="reload" type="button">Reload</button>
       </div>
@@ -120,6 +122,7 @@ function hostHtml(
     <section class="workspace">
       <div id="stage" class="stage">
         <iframe id="game" title=${JSON.stringify(manifest.title)} src="${gameBasePath}index.html?v=${version}" sandbox="allow-scripts"></iframe>
+        <div id="touch-input" class="touch-input" aria-hidden="true"></div>
       </div>
     </section>
   </main>
@@ -133,10 +136,13 @@ function hostHtml(
     var events = document.getElementById("events");
     var stateView = document.getElementById("state");
     var viewport = document.getElementById("viewport");
+    var touchInput = document.getElementById("touch-input");
     var storageKey = "hugame:dev:v1:" + config.projectId;
     var paused = false;
     var muted = false;
     var reported = null;
+    var nextTouchIdentifier = 0;
+    var activeTouches = new Map();
 
     function blankState() {
       return { progress: { data: null, schemaVersion: 1, revision: 0 }, achievements: {} };
@@ -220,6 +226,36 @@ function hostHtml(
       hostMessage({ type: "EVENT", event: name, detail: detail });
       log("EVENT " + name, detail);
     }
+    function touchMode() {
+      return viewport.selectedOptions[0].dataset.touch === "true";
+    }
+    function touchCoordinates(pointer, clamp) {
+      var bounds = frame.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return null;
+      var x = pointer.clientX - bounds.left;
+      var y = pointer.clientY - bounds.top;
+      if (!clamp && (x < 0 || y < 0 || x > bounds.width || y > bounds.height)) return null;
+      x = Math.max(0, Math.min(bounds.width - 0.01, x));
+      y = Math.max(0, Math.min(bounds.height - 0.01, y));
+      return {x: x * frame.clientWidth / bounds.width, y: y * frame.clientHeight / bounds.height};
+    }
+    function sendTouch(type, touch) {
+      hostMessage({type: "TOUCH", event: type, identifier: touch.identifier, x: touch.x, y: touch.y});
+    }
+    function finishTouch(pointer, type) {
+      var touch = activeTouches.get(pointer.pointerId);
+      if (!touch) return;
+      pointer.preventDefault();
+      var point = touchCoordinates(pointer, true);
+      if (point) Object.assign(touch, point);
+      sendTouch(type, touch);
+      activeTouches.delete(pointer.pointerId);
+      try { touchInput.releasePointerCapture(pointer.pointerId); } catch (_) {}
+    }
+    function cancelTouches() {
+      activeTouches.forEach(function(touch) { sendTouch("touchcancel", touch); });
+      activeTouches.clear();
+    }
     function dimensions() {
       var selected = viewport.value.split(",").map(Number);
       var display = config.manifest.display;
@@ -243,6 +279,7 @@ function hostHtml(
       frame.style.width = size.content.width + "px";
       frame.style.height = size.content.height + "px";
       frame.style.transform = "scale(" + scale + ")";
+      touchInput.classList.toggle("active", touchMode());
       return { width: size.content.width, height: size.content.height, scale: scale, expanded: false };
     }
     function sync() {
@@ -300,9 +337,33 @@ function hostHtml(
       log("LOCAL STATE RESET");
       location.reload();
     });
-    viewport.addEventListener("change", function () { reported = null; event("viewport", layout()); });
+    touchInput.addEventListener("pointerdown", function (pointer) {
+      if (!touchMode() || activeTouches.has(pointer.pointerId)) return;
+      var point = touchCoordinates(pointer, false);
+      if (!point) return;
+      pointer.preventDefault();
+      var touch = Object.assign({identifier: nextTouchIdentifier++ % 2147483647}, point);
+      activeTouches.set(pointer.pointerId, touch);
+      try { touchInput.setPointerCapture(pointer.pointerId); } catch (_) {}
+      sendTouch("touchstart", touch);
+    });
+    touchInput.addEventListener("pointermove", function (pointer) {
+      var touch = activeTouches.get(pointer.pointerId);
+      if (!touch) return;
+      pointer.preventDefault();
+      var point = touchCoordinates(pointer, true);
+      if (!point) return;
+      Object.assign(touch, point);
+      sendTouch("touchmove", touch);
+    });
+    touchInput.addEventListener("pointerup", function (pointer) { finishTouch(pointer, "touchend"); });
+    touchInput.addEventListener("pointercancel", function (pointer) { finishTouch(pointer, "touchcancel"); });
+    touchInput.addEventListener("lostpointercapture", function (pointer) { finishTouch(pointer, "touchcancel"); });
+    touchInput.addEventListener("contextmenu", function (event) { event.preventDefault(); });
+    viewport.addEventListener("change", function () { cancelTouches(); reported = null; event("viewport", layout()); });
+    window.addEventListener("blur", cancelTouches);
     window.addEventListener("resize", layout);
-    frame.addEventListener("load", function () { log("IFRAME LOADED"); });
+    frame.addEventListener("load", function () { cancelTouches(); log("IFRAME LOADED"); });
     saveState();
     layout();
     setInterval(function () {

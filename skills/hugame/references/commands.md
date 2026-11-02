@@ -91,7 +91,7 @@ npx hugame dev GAME_FOLDER
 npx hugame dev GAME_FOLDER --port 1758 --no-open
 ```
 
-The command first validates the package. It serves only package files on loopback, watches valid changes, and reloads the game inside the production-style opaque-origin sandbox. The player injects the real runtime bridge, provides 920 × 575, 390 × 700, and 844 × 390 viewports, sends pause/resume/mute/viewport events, logs runtime activity, and emulates progress and achievements in browser storage. Reset local state when testing first-run behavior. Stop the server with Ctrl+C. Local state is test data and never becomes account data.
+The command first validates the package. It serves only package files on loopback, watches valid changes, and reloads the game inside the production-style opaque-origin sandbox. The player injects the real runtime bridge, provides 920 × 575, 390 × 700, and 844 × 390 viewports, sends pause/resume/mute/viewport events, logs runtime activity, and emulates progress and achievements in browser storage. Desktop mode passes normal mouse input through to the game; phone modes translate pointer input into touch events and touch-typed pointer events without exposing mouse movement or button events. Reset local state when testing first-run behavior. Stop the server with Ctrl+C. Local state is test data and never becomes account data.
 
 Without the CLI, use the first static-server option already available on the computer, for example:
 

@@ -86,6 +86,7 @@ export function buildSandboxRuntimeHtml(
   var revision = 0;
   var saveQueue = Promise.resolve();
   var sizeFrame = 0;
+  var emulatedTouches = new Map();
   function contentSize() {
     var root = document.documentElement;
     var body = document.body;
@@ -114,6 +115,68 @@ export function buildSandboxRuntimeHtml(
       send("REQUEST", {requestId: id, request: action});
     });
   }
+  function touchPoint(entry) {
+    var options = {
+      identifier: entry.identifier,
+      target: entry.target,
+      clientX: entry.x,
+      clientY: entry.y,
+      screenX: entry.x,
+      screenY: entry.y,
+      pageX: entry.x + window.scrollX,
+      pageY: entry.y + window.scrollY,
+      radiusX: 1,
+      radiusY: 1,
+      rotationAngle: 0,
+      force: 0.5
+    };
+    try { return new Touch(options); } catch (_) { return options; }
+  }
+  function touchEvent(type, touches, targetTouches, changedTouches) {
+    var options = {bubbles: true, cancelable: true, composed: true, touches: touches, targetTouches: targetTouches, changedTouches: changedTouches};
+    try { return new TouchEvent(type, options); } catch (_) {
+      var event = new Event(type, options);
+      Object.defineProperties(event, {
+        touches: {value: touches},
+        targetTouches: {value: targetTouches},
+        changedTouches: {value: changedTouches}
+      });
+      return event;
+    }
+  }
+  function dispatchEmulatedTouch(message) {
+    var type = message.event;
+    if (!["touchstart", "touchmove", "touchend", "touchcancel"].includes(type) || !Number.isInteger(message.identifier) || message.identifier < 0 || message.identifier > 2147483646 || ![message.x, message.y].every(function(value) { return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 16384; })) return;
+    var entry = emulatedTouches.get(message.identifier);
+    if (type === "touchstart") {
+      if (entry) return;
+      entry = {identifier: message.identifier, target: document.elementFromPoint(message.x, message.y) || document.body, x: message.x, y: message.y, startX: message.x, startY: message.y, moved: false, suppressClick: false, isPrimary: emulatedTouches.size === 0};
+      emulatedTouches.set(message.identifier, entry);
+    } else {
+      if (!entry) return;
+      entry.x = message.x;
+      entry.y = message.y;
+      if (Math.hypot(entry.x - entry.startX, entry.y - entry.startY) > 8) entry.moved = true;
+    }
+    var changed = touchPoint(entry);
+    var ending = type === "touchend" || type === "touchcancel";
+    if (ending) emulatedTouches.delete(entry.identifier);
+    var active = Array.from(emulatedTouches.values()).map(touchPoint);
+    var targetActive = Array.from(emulatedTouches.values()).filter(function(item) { return item.target === entry.target; }).map(touchPoint);
+    var pointerType = {touchstart: "pointerdown", touchmove: "pointermove", touchend: "pointerup", touchcancel: "pointercancel"}[type];
+    if (typeof PointerEvent === "function") {
+      var pointer = new PointerEvent(pointerType, {bubbles: true, cancelable: true, composed: true, pointerId: entry.identifier + 1, pointerType: "touch", isPrimary: entry.isPrimary, clientX: entry.x, clientY: entry.y, screenX: entry.x, screenY: entry.y, width: 2, height: 2, pressure: ending ? 0 : 0.5, button: 0, buttons: ending ? 0 : 1});
+      if (!entry.target.dispatchEvent(pointer)) entry.suppressClick = true;
+    }
+    if (!entry.target.dispatchEvent(touchEvent(type, active, targetActive, [changed]))) entry.suppressClick = true;
+    if (type === "touchend" && !entry.moved && !entry.suppressClick) {
+      var releasedOver = document.elementFromPoint(entry.x, entry.y);
+      if (releasedOver === entry.target || entry.target.contains(releasedOver)) {
+        if (typeof PointerEvent === "function") entry.target.dispatchEvent(new PointerEvent("click", {bubbles: true, cancelable: true, composed: true, pointerId: entry.identifier + 1, pointerType: "touch", isPrimary: entry.isPrimary, clientX: entry.x, clientY: entry.y, screenX: entry.x, screenY: entry.y, width: 2, height: 2, pressure: 0, button: 0, buttons: 0, detail: 1}));
+        else entry.target.click();
+      }
+    }
+  }
   window.addEventListener("message", function(event) {
     var m = event.data;
     if (event.source !== window.parent || event.origin !== settings.parentOrigin || !m || m.source !== "hugame-host" || m.bridgeVersion !== 1 || m.gameId !== settings.gameId || m.versionId !== settings.versionId) return;
@@ -125,6 +188,8 @@ export function buildSandboxRuntimeHtml(
       else entry.resolve(m.result);
     } else if (m.type === "EVENT" && ["pause", "resume", "viewport", "mute"].includes(m.event)) {
       (listeners.get(m.event) || []).slice().forEach(function(fn) { try { fn(m.detail); } catch (error) { console.error(error); } });
+    } else if (m.type === "TOUCH") {
+      dispatchEmulatedTouch(m);
     }
   });
   function send(type, extra) {

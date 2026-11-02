@@ -1,6 +1,6 @@
 {
   "name": "hugame-kit",
-  "version": "0.1.0",
+  "version": "0.0.6",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -8,11 +8,14 @@
     "packages/*"
   ],
   "scripts": {
+    "version:bump": "node scripts/bump-version.mjs",
+    "hooks:install": "git config --local core.hooksPath .githooks",
     "build": "npm run build:cli && npm run build:downloads",
     "build:cli": "node scripts/build-cli.mjs",
     "build:downloads": "tsx scripts/build-downloads.ts",
     "prepare:examples": "node scripts/prepare-demo-games.mjs",
-    "test": "npm run typecheck && npm run test:cli",
+    "test": "npm run typecheck && npm run test:hooks && npm run test:cli",
+    "test:hooks": "node --test test/release-hook.mjs",
     "test:cli": "npm run build:cli && node --test test/cli.contract.mjs",
     "typecheck": "tsc --noEmit"
   },
